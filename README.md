@@ -16,11 +16,11 @@ TECHNIQUES
 2. Realtime Web Application
 3. Google Maps API
 
-APP #1: REQUEST RECEIVER
+### APP #1: REQUEST RECEIVER
 
 **WebApp** nhận thông tin khách (request): họ tên, điện thoại, địa chỉ đón khách, ghi chú
 
-APP #2: LOCATION IDENTIFIER
+### APP #2: LOCATION IDENTIFIER
 
 **WebApp** xác định toạ độ khách dựa trên thông tin do app #1 ghi nhận
 
@@ -29,14 +29,14 @@ APP #2: LOCATION IDENTIFIER
 3. Nhân viên có thể di chuyển vị trí khách trên bản đồ 1 cách tự do, địa chỉ khách khi đó phải được cập nhật lại tương ứng ( **reverse geocoding** )
 4. Lưu ý: địa chỉ gửi cho xe là địa chỉ gốc được ghi nhận bởi điện thoại viên (app #1), không phải địa chỉ có được sau khi **reverse geocode**
 
-APP #3: REQUEST MANAGEMENT
+### APP #3: REQUEST MANAGEMENT
 
 **WebApp** thể hiện danh sách request cùng trạng thái tương ứng (chưa được định vị, đã định vị xong, đã có xe nhận, đang di chuyển, đã hoàn thành, …)
 
 1. Danh sách được sắp xếp theo thứ tự giảm dần theo thời điểm đặt
 2. Trong trường hợp request đã có xe nhận, nhân viên có thể chọn xem đường đi ngắn nhất từ xe đến khách trên bản đồ, thông tin tài xế cũng được thể hiện đầy đủ trên danh sách
 
-APP #4: DRIVER
+### APP #4: DRIVER
 
 **WebApp**
 
