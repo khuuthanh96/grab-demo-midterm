@@ -1,56 +1,42 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Grab Demo </title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="index.css" />
-    <script src="main.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-        crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grab Demo</title>
+    <link href="style.css"  rel="stylesheet"/>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 </head>
-
 <body>
-    <div class="container">
-        <h2 class="text-center title">Grab Demo Midterm: APP#1</h2>
-        <div class="row">
-            <div class="col-2"></div>
-            <div class="col-8 bg-light">
-                <form action="">
-                    <div class="form-group row">
-                        <label class="col-2" for="name">Họ tên:</label>
-                        <input id="name" type="text" class="form-control mb-3 col-10" placeholder="Nhập họ tên">
-                    </div>
-
-                    <div class="form-group row">
-                        <label class="col-2" for="address">Địa chỉ đón:</label>
-                        <input id="address" type="text" class="form-control mb-3 col-10" placeholder="Nhập địa chỉ của bạn">
-                    </div>
-
-                    <div class="form-group row">
-                        <label class="col-2" for="phone">Số điện thoại:</label>
-                        <input id="phone" type="number" class="form-control mb-3 col-10" placeholder="Nhập số điện thoại">
-                    </div>
-
-                    <div class="form-group row">
-                        <label class="col-2" for="descriptions">Ghi chú:</label>
-                        <textarea id="descriptions" rows=4 class="form-control col-10" placeholder="Nhập ghi chú"></textarea>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary mb-3 float-right">Tìm Xe</button>
-                </form>
-            </div>
+    <div class="wrapper">
+        <div class="container">
+            <h1>Welcome</h1>
+            
+            <form class="form">
+                <input type="text" placeholder="Full Name" id="name_us">
+                <input type="text" placeholder="Address" id="address_us">
+                <input type="text" placeholder="Phone Number" id="phone_us">
+                <input type="text" placeholder="Note" id="note_us">
+                <button type="submit" id="find-button">Find</button>
+            </form>
         </div>
+        <div class="language">
+            <button type="button" id="VI_language-button">VI</button>
+            <button type="button" id="EN_language-button">EN</button>
+        </div>
+        <ul class="bg-bubbles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
+    <script src="main.js" type="text/javascript"></script>
 </body>
-
 </html>
