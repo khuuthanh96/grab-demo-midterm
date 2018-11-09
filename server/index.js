@@ -11,15 +11,20 @@ const http = require("http").Server(app)
 const io = require("socket.io")(http)
 
 require("./lib/passport"); // use passport strategy
+const passport = require("passport");
 
 app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get("/", (req, res) => res.json({"msg": "Welcome to grab-demo-midterm API."}));
 const authRouter = require('./controller/auth');
+const apiRouter = require('./controller/api');
+
+app.get("/", (req, res) => res.json({"msg": "Welcome to grab-demo-midterm API."}));
 
 app.use("/auth", authRouter);
+app.use("/api", passport.authenticate("jwt", {session: false}), apiRouter);
+
 
 var readyDriver = [];
 

@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
 
-function sign(payload) {
+function sign(payload, expiresIn) {
+    console.log(expiresIn)
     return new Promise((resolve, reject) => {
-        jwt.sign(payload, process.env.TOKEN_SECRET_KEY, { expiresIn: "1h" }, (err, token) => {
+        jwt.sign(payload, process.env.TOKEN_SECRET_KEY, { expiresIn: expiresIn }, (err, token) => {
             if (err) return reject(err);
             resolve(token);
         })
