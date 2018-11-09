@@ -17,12 +17,32 @@ router.post("/login", (req, res, next) => {
                res.json(err);
            }
 
-           const accessToken = await sign(user, "ACCESS_TOKEN")
-           const refreshToken = await sign(user, "REFRESH_TOKEN");
+           const accessToken = await sign(user);
+           const refreshToken = await sign({user, rt: true});
            return res.json({user, accessToken, refreshToken});
         });
     })(req, res);
 });
 
+router.post("/refreshtoken", (req, res, next) => {
+  verify(req.body.refreshToken)
+  .then(async (payload) => {
+      if (payload.rt) {
+        const accesstoken = await sign(payload.user); 
+        return res.json({user: payload.user, accesstoken});
+      } else {
+        return res.status(400).json({
+            message: "Invalid token!",
+            user: {}
+        })
+      }
+  })
+  .catch(err => {
+    return res.status(400).json({
+        message: err || "Invalid token!",
+        user: {}
+    })
+  });
+})
 
 module.exports = router;
