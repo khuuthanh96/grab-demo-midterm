@@ -7,7 +7,7 @@ const passport = require("passport");
 router.post("/login", (req, res, next) => {
     passport.authenticate('local', { session: false }, (err, user, info) => {
         if (err || !user) {
-            return res.status(400).json({
+            return res.status(401).json({
                 message: err || info,
                 user: user
             });
@@ -31,7 +31,7 @@ router.post("/refreshtoken", (req, res, next) => {
                 const accesstoken = await sign(payload.user, "1h");
                 return res.json({ user: payload.user, accesstoken });
             } else {
-                return res.status(400).json({
+                return res.status(401).json({
                     message: "Invalid token!",
                     user: {}
                 })
@@ -39,7 +39,7 @@ router.post("/refreshtoken", (req, res, next) => {
         })
         .catch(err => {
             console.log(err);
-            return res.status(400).json({
+            return res.status(401).json({
                 message: "Invalid token!",
                 user: {}
             })
