@@ -7,6 +7,13 @@ $("#find-button").click(function(event)
 	$("form").fadeOut(500);
     $(".wrapper").addClass("form-success");
 
+    var check = check_Form();
+    if (check == false)
+    {
+        $("form").fadeIn(500);
+        $(".wrapper").removeClass("form-success");
+    }
+    
     var timer = 0;
 
     var socket = io("http://localhost:8000");
@@ -45,12 +52,6 @@ $("#find-button").click(function(event)
             
         });
     });
-    var check = check_Form();
-    if (check == false)
-    {
-        $("form").fadeIn(500);
-        $(".wrapper").removeClass("form-success");
-    }
 });
 
 function check_Form()
