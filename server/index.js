@@ -62,17 +62,21 @@ io.on("connect", (socket) => {
 
 http.listen(process.env.PORT,() => console.log(`Server listening on port: ${process.env.PORT}`));
 
-// const user = require("./models/user");
-// const init = async () => {
-//     await user.signUp("admin@gmail.com", "123", "super admin", "123 abc, P3, Q.1", "0123456", "male", "admin");
-//     await user.signUp("taixe1@gmail.com", "123", "taixe 1", "321 cba, P1, Q.3", "0123456", "male", "driver");
-//     await user.signUp("taixe2@gmail.com", "123", "taixe 2", "543 sfas, P3, Q.10", "0123456", "male", "driver");
-//     await user.signUp("taixe3@gmail.com", "123", "taixe 3", "76 vsf, P14, Q.6", "0123456", "male", "driver");
+const user = require("./models/user");
+const init = async () => {
+    // await user.signUp("admin@gmail.com", "123", "super admin", "123 abc, P3, Q.1", "0123456", "male", "admin");
+    // await user.signUp("taixe1@gmail.com", "123", "taixe 1", "321 cba, P1, Q.3", "0123456", "male", "driver");
+    // await user.signUp("taixe2@gmail.com", "123", "taixe 2", "543 sfas, P3, Q.10", "0123456", "male", "driver");
+    // await user.signUp("taixe3@gmail.com", "123", "taixe 3", "76 vsf, P14, Q.6", "0123456", "male", "driver");
 
-//         // request.newRequest({
-//         //     clientName: "Tun",
-//         //     address: "nguyen trai, Q.1",
-//         //     phone: "0123456"
-//         // })
-// }
-// init();
+    // await user.signUp("user1@gmail.com", "123", "Tèo Ca Ca", "123 abc, P3, Q.1", "0123456", "male");
+    // await user.signUp("user2@gmail.com", "123", "Tà Ceo Ceo", "321 cba, P1, Q.3", "0123456", "male");
+    // await user.signUp("user3@gmail.com", "123", "Tả Pí Lù", "543 sfas, P3, Q.10", "0123456", "male");
+    // await user.signUp("user4@gmail.com", "123", "Tủ Pí Là", "76 vsf, P14, Q.6", "0123456", "male");
+        // request.newRequest({
+        //     clientName: "Tun",
+        //     address: "nguyen trai, Q.1",
+        //     phone: "0123456"
+        // })
+}
+init();

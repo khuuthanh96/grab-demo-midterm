@@ -1,5 +1,74 @@
 var lang = 1;
 
+$(document).ready(function(){
+    if(typeof getCookie("refreshtoken") != "string") {
+        $(".btn-signin").click(function(event){
+            event.stopPropagation();
+            $(".btn-signin").removeClass("active");
+            $(".title_signin").removeClass("none");
+            $(".form").removeClass("none");
+            $(".content").addClass("none");
+        });
+        $(".signup_avatar").click(function(event){
+            event.stopPropagation();
+            $(".container_signin").removeClass("none");
+            $(".screenWelcome").removeClass("none");
+        });    
+    }
+    else {
+        $(".container_signin").addClass("none");
+        $(".screenWelcome").addClass("none");
+
+        user = JSON.parse(getCookie("user"));
+        if(user) {
+            //set default data
+            $("#clientName").val(user.name),
+            $("#address").val(user.address),
+            $("#phone").val(parseInt(user.phone))
+        }
+    }
+})
+
+$("#signin-button").click(function(event)
+{
+    event.preventDefault();
+    var data = {
+        "email": $("#name").val(),
+        "password": $("#password").val()
+    }
+
+    //request api login -> có được user, accesstoken, refreshtoken
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:8000/auth/login",
+        data: JSON.stringify(data),
+        dataType: "json",
+        contentType: "application/json",
+        success: function(data, status) {
+            $(".container_signin").addClass("none");
+            $(".screenWelcome").addClass("none");
+            setCookie("accesstoken", data.accessToken, 1);
+            setCookie("refreshtoken", data.refreshToken, 7);
+            setCookie("user", JSON.stringify(data.user), 7);
+
+            //set default data
+            $("#clientName").val(data.user.name),
+            $("#address").val(data.user.address),
+            $("#phone").val(data.user.phone)
+        },
+        error: function(jqXhr) {
+            $(".btn-signin").addClass("active");
+            $(".title_signin").addClass("none");
+            $(".form").addClass("none");
+            $(".content").removeClass("none");
+            $("#msg").text(jqXhr.responseJSON.message.message);
+            setTimeout(() => {
+                $("#msg").text("");
+            }, 3000)
+        }
+    })
+});
+
 $("#find-button").click(function(event)
 {
 	event.preventDefault();
@@ -13,54 +82,60 @@ $("#find-button").click(function(event)
         $("form").fadeIn(500);
         $(".wrapper").removeClass("form-success");
     }
-    
-    var timer = 0;
 
-    var socket = io("http://localhost:8000");
+    var data = {
+        clientName: $("#clientName").val(),
+        address: $("#address").val(),
+        phone: $("#phone").val(),
+        note: $("#note").val()
+    }
 
-    socket.on('connect', function() {
-        if (lang == 0) $("#msg").text("Đang tìm...");
-        else $("#msg").text("Finding...");
-        
-        socket.emit('newRequest', {
-            client: $("#name").val(),
-            address: $('#address').val(),
-            phone: $('#phone').val(),
-            note: $('#note').val()
-        })
-
-        var myTimer = setInterval(function() {
-            timer += 1;
-            if(timer == 5) {
-                clearInterval(myTimer);
-                timer = 0;
-
-                if(lang == 0 ) $("#msg").text("Xin Chào")
-                else $("#msg").text("Welcome")
-            
-                $("form").fadeIn(500);
-                $(".wrapper").removeClass("form-success");
-
-                socket.emit('end');
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:8000/api/request",
+        data: JSON.stringify(data),
+        dataType: "json",
+        contentType: "application/json",
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+        },
+        success: function(data, status) {
+            //nếu tạo request thành công: 
+            if(data.success) {
+                var myRequest = data.data;
+                $("#result").text("Loading.....")
+                //tạo 1 request long polling để đợi server dữ liệu. tối đa 60s
+                $.ajax({
+                    type: "GET",
+                    url: "http://localhost:8000/api/request/accepted/" + myRequest._id,
+                    data: {},
+                    dataType: "json",
+                    contentType: "application/json",
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+                    },
+                    success: function(data) {
+                        if(data.success) {
+                            $("#result").text("Success! Found driver " + data.data.driverName);
+                        } else {
+                            $("form").fadeIn(500);
+                            $(".wrapper").removeClass("form-success");
+                            $("#result").text("Booking")
+                        }
+                    }
+                })
             }
-        }, 1000);
 
-        socket.on('foundDriver', function(data){
-            clearInterval(myTimer);
-            timer = 0;
-
-            
-        });
-
-        socket.on('error', function(data){
-            console.log(data);
-        })
-    });
+        },
+        error: function(jqXhr) {
+            console.log(jqXhr);
+        }
+    })
 });
 
 function check_Form()
 {
-    if( $('#name').val() == "" ) 
+    if( $('#clientName').val() == "" ) 
     {
         alert("Must not be empty <Full Name>.\nKhông được để trống <Họ và Tên>. ");
         return false;
@@ -131,3 +206,32 @@ $("#EN_language-button").click(function(event)
     $("#find-button").text("Find");
 });
 
+function setCookie(name, value, days) {
+    var expires;
+
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toGMTString();
+    } else {
+        expires = "";
+    }
+    document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + "; path=/";
+}
+
+function getCookie(name) {
+    var nameEQ = encodeURIComponent(name) + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) === ' ')
+            c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0)
+            return decodeURIComponent(c.substring(nameEQ.length, c.length));
+    }
+    return null;
+}
+
+function eraseCookie(name) {
+    setCookie(name, "", -1);
+}

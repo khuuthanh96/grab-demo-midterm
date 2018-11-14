@@ -5,13 +5,13 @@ const userSchema = mongoose.Schema({
     email: {type: String, required: true, unique: true, trim: true},
     password: {type: String, required: true, trim:true},
     name: { type: String, required: true, trim: true, minlength: 6, maxlength: 40 },
-    phone: { type: String,required: true, trim: true, minLength: 9, maxlength: 11 },
+    phone: { type: String,required: true, trim: true, minlength: 9, maxlength: 12 },
     sex: { type: String, enum: ['male', 'female'], default: 'male' },
     address: { type: String, required: true },
     roles: {
         type: String,
-        enum: ['driver', 'admin'],
-        default: 'driver'
+        enum: ['driver', 'admin', 'user'],
+        default: 'user'
     },
     active: { type: Boolean, default: false },
     status: { type: Boolean, default: false },

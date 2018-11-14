@@ -4,14 +4,7 @@ const router  = express.Router();
 const user = require("../models/user");
 const request = require("../models/request");
 
-const STATE = {
-    CHUA_DINH_VI: 0,
-    DA_DINH_VI: 1,
-    XE_NHAN: 2,
-    DANG_DI_CHUYEN: 3,
-    DA_HOAN_THANH: 4
-} 
-
+const { STATE } = require("../lib/const");
 
 router.get("/", (req, res) => res.json({message: `Hello ${req.user.name}`}));
 
@@ -116,7 +109,8 @@ router.get("/request", (req, res) => {
 
 router.post("/request", async (req, res) => {
     const { clientName, address, phone, note } = req.body;
-    if (typeof clientName != "string" || typeof address != "string" || typeof phone != "string" || typeof note != "string") {
+    if (typeof clientName != "string" || typeof address != "string" || typeof phone != "string") {
+        console.log(typeof clientName, typeof address, typeof phone)
         res.json({
             success: false,
             message: "dữ liệu không hợp lệ"
@@ -164,5 +158,30 @@ router.put("/request/state/:id", (req, res) => {
         })
     });
 });
+
+router.get("/request/accepted/:reqID", (req, res) => {
+    const id = req.params.reqID;
+    const myInterval = setInterval(async () => {
+        const myReq = await request.findRequestAcceptedByID(id);
+        if(myReq) {
+            res.json({
+                success: true,
+                data: myReq
+            });
+            clearInterval(myInterval);
+            clearTimeout(myTimeout)
+            return
+        }
+    }, 4000)
+ 
+    const myTimeout = setTimeout(() => {
+        clearInterval(myInterval);
+        request.findByIdAndRemove(id);
+        res.json({
+            success: false,
+            data: {}
+        })
+    }, 60*1000)
+})
 
 module.exports = router;

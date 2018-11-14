@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
+const { STATE } = require("../lib/const");
 
 const requestSchema = mongoose.Schema({
     clientName: { type: String, required: true },
     driverName: { type: String },
     address: { type: String, required: true },
-    phone: { type: String, required: true },
+    phone: { type: String,required: true, trim: true, minlength: 9, maxlength: 12 },
     note: { type: String },
     state: { type: Number },
 }, {timestamps: true});
@@ -19,8 +20,20 @@ class Request extends RequestModel {
         .catch(error => {
             console.log(error)
         });
-        // const r = request.toObject();
+
         return request;
+    }
+
+    static async findRequestAcceptedByID(id) {
+        const req = await Request.findById(id)
+        .catch(err => console.log(err))
+        if(typeof req == "undefined") return false;
+
+        if(req.state == STATE.XE_NHAN) {
+            return req;
+        } else {
+            return false;
+        }
     }
 };
 

@@ -25,18 +25,25 @@ $(document).ready(function(){
             $(".driver_form").removeClass("active");
         }
     });
-    $(".btn-signin").click(function(event){
-        event.stopPropagation();
-        $(".btn-signin").removeClass("active");
-        $(".title_signin").removeClass("none");
-        $(".form").removeClass("none");
-        $(".content").addClass("none");
-    });
-    $(".signup_avatar").click(function(event){
-        event.stopPropagation();
-        $(".container_signin").removeClass("none");
-        $(".screenWelcome").removeClass("none");
-    });    
+
+    if(typeof getCookie("accesstoken") != "string") {
+        $(".btn-signin").click(function(event){
+            event.stopPropagation();
+            $(".btn-signin").removeClass("active");
+            $(".title_signin").removeClass("none");
+            $(".form").removeClass("none");
+            $(".content").addClass("none");
+        });
+        $(".signup_avatar").click(function(event){
+            event.stopPropagation();
+            $(".container_signin").removeClass("none");
+            $(".screenWelcome").removeClass("none");
+        });    
+    }
+    else {
+        $(".container_signin").addClass("none");
+        $(".screenWelcome").addClass("none");
+    }
 });
 $("#signin-button").click(function(event)
 {
@@ -70,20 +77,20 @@ $("#signin-button").click(function(event)
             }, 3000)
         }
     })
-
-    $.ajax({
-        type: "GET",
-        url: "http://localhost:8000/api/request",
-        dataType: "json",
-        data: {},
-        beforeSend: function(xhr) {
-            xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
-        },
-        success: function(data, status) {
-            console.log(data)
-            console.log(status)
-        },
-    })
+    //demo lấy dữ liệu từ api
+    // $.ajax({
+    //     type: "GET",
+    //     url: "http://localhost:8000/api/request",
+    //     dataType: "json",
+    //     data: {},
+    //     beforeSend: function(xhr) {
+    //         xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+    //     },
+    //     success: function(data, status) {
+    //         console.log(data)
+    //         console.log(status)
+    //     },
+    // })
 });
 $("#VI_language-button").click(function(event)
 {
