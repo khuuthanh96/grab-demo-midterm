@@ -5,26 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grab Demo</title>
     <link href="style.css"  rel="stylesheet"/>
+    <link href="signin.css"  rel="stylesheet"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
+    <div class="screenWelcome">
+        <div class="content">
+            <div class="content__container">
+                <p class="content__container__text">
+                Hello
+                </p>
+                
+                <ul class="content__container__list">
+                <li class="content__container__list__item">everybody !</li>
+                <li class="content__container__list__item">my_friend !</li>
+                <li class="content__container__list__item">users !</li>
+                <li class="content__container__list__item">world !</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container_signin">
+        <h1 class="btn-signin active">Sign in</h1>
+        <h1 class="title_signin none">Hi ! My friend !</h1>
+        
+        <form class="form none">
+            <span class="fa fa-user"></span>
+            <input type="text" placeholder="Full Name" id="name">
+            <span class="fa fa-unlock-alt"></span>
+            <input type="password" placeholder="Password" id="password">
+            <button type="submit" id="signin-button">Sign In</button>
+        </form>
+    </div>
+    <div class="avatar">AVATAR
+        <div class="signup_avatar">Sign Up</div>
+    </div>
     <nav>
         <div id="logo">LOGO</div>
-        <a href="#" title="User" class="user active">
-            <span class="fa fa-user"></span>
-            <span class="label">User</span>
-        </a>
-        <a href="#" title="Driver" class="driver ">
+        <a href="#" title="Driver" class="driver active">
             <span class="fa fa-motorcycle"></span>
             <span class="label">Driver</span>
         </a>
+        <a href="#" title="Request" class="request ">
+            <span class="fa fa-th-list"></span>
+            <span class="label">Request</span>
+        </a>
     </nav>
     <div class="wrapper">
-        <div class="user_form child_wrapper active">
+        <div class="driver_form child_wrapper active">
             <div class="container">
-                <h1>User</h1>
+                <h1>Driver</h1>
                 <div class="tbl-header">
                     <table cellpadding="0" cellspacing="0" border="0">
                         <thead>
@@ -88,9 +121,9 @@
                 </div>
             </div>
         </div>
-        <div class="driver_form child_wrapper">
+        <div class="request_form child_wrapper">
             <div class="container">
-                <h1>Driver</h1>
+                <h1>Request</h1>
                 <div class="tbl-header">
                     <table cellpadding="0" cellspacing="0" border="0">
                         <thead>

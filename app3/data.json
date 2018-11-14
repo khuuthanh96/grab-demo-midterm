@@ -1,0 +1,45 @@
+{
+  "users": [
+  {
+    "clientName" : "Steve Job",
+    "driverName" : "Manuel Mauer",
+    "address" :  "Position A",
+    "phone" : "123456789",
+    "note" : "I am handsome."
+  },
+  {
+    "clientName" : "Peter Pan",
+    "driverName" : "Lenoural",
+    "address" :  "Position B",
+    "phone" : "123456789",
+    "note" : "Hi."
+  },
+  {
+    "clientName" : "Thomas Wilson",
+    "driverName" : "Tomy Halulo",
+    "address" :  "Position C",
+    "phone" : "123456789",
+    "note" : "Hello World."
+  },
+  {
+    "clientName" : "Jack Boston",
+    "driverName" : "Baly Pilot",
+    "address" :  "Position C",
+    "phone" : "123456789",
+    "note" : ""
+  },
+  {
+    "clientName" : "John Carpenter",
+    "driverName" : "Rainbow One Colour",
+    "address" :  "Position C",
+    "phone" : "123456789",
+    "note" : "I love John Lennon."
+  },
+  {
+    "clientName" : "Sophie",
+    "driverName" : "Maximiliand D.Brown",
+    "address" :  "Position D",
+    "phone" : "123456789",
+    "note" : "It will rain."
+  }
+]}
