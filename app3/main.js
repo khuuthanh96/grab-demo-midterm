@@ -41,20 +41,49 @@ $(document).ready(function(){
 $("#signin-button").click(function(event)
 {
     event.preventDefault();
-    var check = true;
-    if (check === false)
-    {
-        $(".btn-signin").addClass("active");
-        $(".title_signin").addClass("none");
-        $(".form").addClass("none");
-        $(".content").removeClass("none");
+    var data = {
+        "email": $("#name").val(),
+        "password": $("#password").val()
     }
-    else
-    {
-        $(".container_signin").addClass("none");
-        $(".screenWelcome").addClass("none");
-        
-    }
+
+    //request api login -> có được user, accesstoken, refreshtoken
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:8000/auth/login",
+        data: JSON.stringify(data),
+        dataType: "json",
+        contentType: "application/json",
+        success: function(data, status) {
+            $(".container_signin").addClass("none");
+            $(".screenWelcome").addClass("none");
+            setCookie("accesstoken", data.accessToken, 1);
+            setCookie("refreshtoken", data.refreshToken, 7);
+        },
+        error: function(jqXhr) {
+            $(".btn-signin").addClass("active");
+            $(".title_signin").addClass("none");
+            $(".form").addClass("none");
+            $(".content").removeClass("none");
+            $("#msg").text(jqXhr.responseJSON.message.message);
+            setTimeout(() => {
+                $("#msg").text("");
+            }, 3000)
+        }
+    })
+
+    $.ajax({
+        type: "GET",
+        url: "http://localhost:8000/api/request",
+        dataType: "json",
+        data: {},
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+        },
+        success: function(data, status) {
+            console.log(data)
+            console.log(status)
+        },
+    })
 });
 $("#VI_language-button").click(function(event)
 {
@@ -88,8 +117,8 @@ $(document).ready(function() {
     {
         console.log("It work!")
         $.each(data.users, function(key, val) {
-            alert(val[0].clientName);
-            alert(val[0].driverName);
+            // alert(val[0].clientName);
+            // alert(val[0].driverName);
          })
     });
 });
@@ -128,3 +157,33 @@ $(document).ready(function () {
     });
 });
 */
+
+function setCookie(name, value, days) {
+    var expires;
+
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toGMTString();
+    } else {
+        expires = "";
+    }
+    document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + "; path=/";
+}
+
+function getCookie(name) {
+    var nameEQ = encodeURIComponent(name) + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) === ' ')
+            c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0)
+            return decodeURIComponent(c.substring(nameEQ.length, c.length));
+    }
+    return null;
+}
+
+function eraseCookie(name) {
+    createCookie(name, "", -1);
+}
