@@ -12,6 +12,16 @@ const requestSchema = mongoose.Schema({
 const RequestModel = mongoose.model('Request', requestSchema);
 
 class Request extends RequestModel {
+    static async newRequest(clientName, address, phone, note) {
+        const request = new Request({ clientName, address, phone, note, state: 0 });
+        
+        await request.save()
+        .catch(error => {
+            console.log(error)
+        });
+        // const r = request.toObject();
+        return request;
+    }
 };
 
 module.exports = Request;

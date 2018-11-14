@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const {hash, compare} = require("bcrypt");
 
 const userSchema = mongoose.Schema({
-    email: {type: String, required: true, unique: true, trim: true, lowercase: true},
+    email: {type: String, required: true, unique: true, trim: true},
     password: {type: String, required: true, trim:true},
     name: { type: String, required: true, trim: true, minlength: 6, maxlength: 40 },
     phone: { type: String,required: true, trim: true, minLength: 9, maxlength: 11 },
@@ -15,7 +15,8 @@ const userSchema = mongoose.Schema({
     },
     active: { type: Boolean, default: false },
     status: { type: Boolean, default: false },
-    localtion: { type: String }
+    lat: { type: Number, default: 0 },
+    long: { type: Number, default: 0 }
 });
 
 const UserModel = mongoose.model('User', userSchema);

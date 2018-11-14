@@ -3,8 +3,9 @@ const express = require("express");
 const router = express.Router();
 const { sign, verify } = require("../lib/jwt");
 const passport = require("passport");
+const User = require("../models/user");
 
-router.post("/login", (req, res, next) => {
+router.post("/login", (req, res) => {
     passport.authenticate('local', { session: false }, (err, user, info) => {
         if (err || !user) {
             return res.status(401).json({
@@ -16,7 +17,11 @@ router.post("/login", (req, res, next) => {
             if (err) {
                 res.json(err);
             }
-        
+
+            user.status = true;
+            User.findByIdAndUpdate(user._id, { $set: {"status": true}})
+            .catch(err => console.log("user status findByIdAndUpdate: ", err));
+            
             const accessToken = await sign(user, "1h");
             const refreshToken = await sign({ user, rt: true }, "7d");
             return res.json({ user, accessToken, refreshToken });
@@ -24,7 +29,7 @@ router.post("/login", (req, res, next) => {
     })(req, res);
 });
 
-router.post("/refreshtoken", (req, res, next) => {
+router.post("/refreshtoken", (req, res) => {
     verify(req.body.refreshToken)
         .then(async (payload) => {
             if (payload.rt) {

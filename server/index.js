@@ -1,5 +1,5 @@
 require("dotenv").config();
-require("./models/connDatabase");
+require("./lib/connDatabase");
 
 const express = require("express");
 const logger = require("morgan");
@@ -27,18 +27,6 @@ app.get("/", (req, res) => res.json({"msg": "Welcome to grab-demo-midterm API."}
 
 app.use("/auth", authRouter);
 app.use("/api", passport.authenticate("jwt", {session: false}), apiRouter);
-
-
-var readyDriver = [];
-var bookingRequest = [];
-
-const STATE = {
-    CHUA_DINH_VI: 0,
-    DA_DINH_VI: 1,
-    XE_NHAN: 2,
-    DANG_DI_CHUYEN: 3,
-    DA_HOAN_THANH: 4
-} 
 
 io.on("connect", (socket) => {
     console.log("a user connected: " + socket.id);
@@ -75,14 +63,11 @@ io.on("connect", (socket) => {
 http.listen(process.env.PORT,() => console.log(`Server listening on port: ${process.env.PORT}`));
 
 // const user = require("./models/user");
-
-
-
 // const init = async () => {
-// //     await user.signUp("admin@gmail.com", "123", "super admin", "123 abc, P3, Q.1", "0123456", "male", "admin");
-// //     await user.signUp("taixe1@gmail.com", "123", "taixe 1", "321 cba, P1, Q.3", "0123456", "male", "driver");
-// //     await user.signUp("taixe2@gmail.com", "123", "taixe 2", "543 sfas, P3, Q.10", "0123456", "male", "driver");
-// //     await user.signUp("taixe3@gmail.com", "123", "taixe 3", "76 vsf, P14, Q.6", "0123456", "male", "driver");
+//     await user.signUp("admin@gmail.com", "123", "super admin", "123 abc, P3, Q.1", "0123456", "male", "admin");
+//     await user.signUp("taixe1@gmail.com", "123", "taixe 1", "321 cba, P1, Q.3", "0123456", "male", "driver");
+//     await user.signUp("taixe2@gmail.com", "123", "taixe 2", "543 sfas, P3, Q.10", "0123456", "male", "driver");
+//     await user.signUp("taixe3@gmail.com", "123", "taixe 3", "76 vsf, P14, Q.6", "0123456", "male", "driver");
 
 //         // request.newRequest({
 //         //     clientName: "Tun",
