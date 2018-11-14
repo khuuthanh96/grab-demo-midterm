@@ -296,16 +296,16 @@ nav a .label
   }
 }
 /*Table*/
-.user_form,
-.driver_form
+.driver_form,
+.request_form
 {
   position: absolute;
   height: 100%;
   width: calc(100% - 64px);
   left: 64px;
 }
-.user_form .container,
-.driver_form .container
+.driver_form .container,
+.request_form .container
 {
   position: absolute;
   width: 80%;
@@ -313,8 +313,8 @@ nav a .label
   right: 0;
   margin: 15vh auto 0 auto;
 }
-.user_form h1,
-.driver_form h1
+.driver_form h1,
+.request_form h1
 {
   font-size: 40px;
   transition-duration: 1s;
@@ -322,8 +322,8 @@ nav a .label
   font-weight: 400;
   text-align: center;
 }
-.user_form table,
-.driver_form table
+.driver_form table,
+.request_form table
 {
   margin-top: 20px;
   width:100%;
@@ -359,39 +359,39 @@ td
   color: #fff;
   border-bottom: solid 1px rgba(255,255,255,0.1);
 }
-.user_form tr th:nth-child(1),
-.user_form tr td:nth-child(1)
-{
-  width: 15%;
-}
-.user_form tr th:nth-child(2),
-.user_form tr td:nth-child(2)
-{
-  width: 15%;
-}
-.user_form tr th:nth-child(3),
-.user_form tr td:nth-child(3)
-{
-  width: 30%;
-}
-.user_form tr th:nth-child(4),
-.user_form tr td:nth-child(4)
-{
-  width: 15%;
-}
-
 .driver_form tr th:nth-child(1),
 .driver_form tr td:nth-child(1)
 {
-  width: 12%;
+  width: 15%;
 }
 .driver_form tr th:nth-child(2),
 .driver_form tr td:nth-child(2)
 {
-  width: 25%;
+  width: 15%;
 }
 .driver_form tr th:nth-child(3),
 .driver_form tr td:nth-child(3)
+{
+  width: 30%;
+}
+.driver_form tr th:nth-child(4),
+.driver_form tr td:nth-child(4)
+{
+  width: 15%;
+}
+
+.request_form tr th:nth-child(1),
+.request_form tr td:nth-child(1)
+{
+  width: 12%;
+}
+.request_form tr th:nth-child(2),
+.request_form tr td:nth-child(2)
+{
+  width: 25%;
+}
+.request_form tr th:nth-child(3),
+.request_form tr td:nth-child(3)
 {
   width: 40%;
 }
@@ -456,7 +456,7 @@ td
     background: #444;
     color: #bee0ff;
   }
-  nav a.driver
+  nav a.request
   {
     left: 32.5px;
   }
@@ -472,14 +472,14 @@ td
   {
     display: none;
   }
-  .user_form,
-  .driver_form
+  .driver_form,
+  .request_form
   {
     width: 100%;
     left: 0;
   }
-  .user_form .container,
-  .driver_form .container
+  .driver_form .container,
+  .request_form .container
   {
     margin: 12vh auto 0 auto;
   }
@@ -493,8 +493,8 @@ td
     padding: 2px 5px;
     font-size: 10px;
   }
-  .user_form tr th:nth-child(4),
-  .user_form tr td:nth-child(4)
+  .driver_form tr th:nth-child(4),
+  .driver_form tr td:nth-child(4)
   {
     width: 20%;
   }
