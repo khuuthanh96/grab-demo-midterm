@@ -44,6 +44,10 @@ $("#find-button").click(function(event)
 
             
         });
+
+        socket.on('error', function(data){
+            console.log(data);
+        })
     });
 });
 

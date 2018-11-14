@@ -5,21 +5,13 @@ const requestSchema = mongoose.Schema({
     driverName: { type: String },
     address: { type: String, required: true },
     phone: { type: String, required: true },
-    note: { type: String }
-});
+    note: { type: String },
+    state: { type: Number },
+}, {timestamps: true});
 
 const RequestModel = mongoose.model('Request', requestSchema);
 
 class Request extends RequestModel {
-    static newRequest(req) {
-        const request = new Request(req);
-
-        request.save()
-        .then(newReq => console.log("success: ", newReq))
-        .catch(err => console.log("newRequest fail!"));
-
-        return "ok";
-    };
 };
 
 module.exports = Request;
