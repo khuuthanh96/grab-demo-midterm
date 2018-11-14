@@ -12,7 +12,8 @@
     font-weight: 300;
     src: local('Source Sans Pro Light'), local('SourceSansPro-Light'), url(https://fonts.gstatic.com/s/sourcesanspro/v11/6xKydSBYKcSV-LCoeQqfX1RYOo3ik4zwlxdr.ttf) format('truetype');
 }
-* {
+* 
+{
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -73,9 +74,7 @@ body :-ms-input-placeholder
 }
 .container 
 {
-    max-width: 600px;
-    margin: 10vh auto;
-    padding: 80px 0;
+    margin: 20vh auto 0 auto;
     height: 400px;
     text-align: center;
 }
@@ -84,7 +83,7 @@ body :-ms-input-placeholder
     font-size: 40px;
     transition-duration: 1s;
     transition-timing-function: ease-in-put;
-    font-weight: 200;
+    font-weight: 400;
 }
 form 
 {
@@ -109,7 +108,7 @@ form input
     font-size: 18px;
     color: white;
     transition-duration: 0.25s;
-    font-weight: 300;
+    font-weight: 400;
 }
 form input:hover 
 {
@@ -120,6 +119,20 @@ form input:focus
     background-color: white;
     width: 300px;
     color: #53e3a6;
+}
+form span
+{
+  z-index: -1;
+  position: absolute;
+  left: calc(50% - 122.5px);
+  width: 40px;
+  height: 40px;
+  margin-top: 2.5px;
+  padding: 10px 0 0 0.5px;
+  text-align: center;
+  font-size: 20px;
+  background-color: rgba(255, 255, 255, 0.4); 
+  border-radius: 3px;
 }
 form button 
 {
@@ -155,7 +168,7 @@ form button:hover
     position: absolute;
     width: 30px;
     height: 100%;
-    font-weight: 300;
+    font-weight: 400;
     cursor: pointer;
     color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.4);
