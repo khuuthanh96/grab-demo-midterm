@@ -383,7 +383,7 @@ td
 .request_form tr th:nth-child(1),
 .request_form tr td:nth-child(1)
 {
-  width: 12%;
+  width: 30%;
 }
 .request_form tr th:nth-child(2),
 .request_form tr td:nth-child(2)
@@ -393,7 +393,7 @@ td
 .request_form tr th:nth-child(3),
 .request_form tr td:nth-child(3)
 {
-  width: 40%;
+  width: 30%;
 }
 /* tr:nth-child(even) 
 {
