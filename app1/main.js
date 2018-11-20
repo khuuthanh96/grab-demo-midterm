@@ -1,19 +1,9 @@
 var lang = 1;
-
+var myRequest;
 $(document).ready(function(){
     if(typeof getCookie("refreshtoken") != "string") {
-        $(".btn-signin").click(function(event){
-            event.stopPropagation();
-            $(".btn-signin").removeClass("active");
-            $(".title_signin").removeClass("none");
-            $(".form").removeClass("none");
-            $(".content").addClass("none");
-        });
-        $(".signup_avatar").click(function(event){
-            event.stopPropagation();
-            $(".container_signin").removeClass("none");
-            $(".screenWelcome").removeClass("none");
-        });    
+        $(".container_signin").removeClass("none");
+        $(".screenWelcome").removeClass("none");
     }
     else {
         $(".container_signin").addClass("none");
@@ -27,6 +17,38 @@ $(document).ready(function(){
             $("#phone").val(parseInt(user.phone))
         }
     }
+    $(".btn-signin").click(function(event){
+        event.stopPropagation();
+        $(".btn-signin").removeClass("active");
+        $(".title_signin").removeClass("none");
+        $(".form").removeClass("none");
+        $(".content").addClass("none");
+    });
+    $(".signup_avatar").click(function(event){
+        event.stopPropagation();
+        $(".container_signin").removeClass("none");
+        $(".screenWelcome").removeClass("none");
+    });    
+})
+
+$(window).bind('beforeunload', function() {
+    $.ajax({
+        type: "DELETE",
+        url: "http://localhost:8000/api/request/" + myRequest._id,
+        data: {},
+        dataType: "json",
+        contentType: "application/json",
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+        },
+        success: function(data) {
+            if(data.success) {
+                console.log(data.success);
+            } else {
+                console.log(data.success);
+            }
+        }
+    })
 })
 
 $("#signin-button").click(function(event)
@@ -102,7 +124,7 @@ $("#find-button").click(function(event)
         success: function(data, status) {
             //nếu tạo request thành công: 
             if(data.success) {
-                var myRequest = data.data;
+                myRequest = data.data;
                 $("#result").text("Loading.....")
                 //tạo 1 request long polling để đợi server dữ liệu. tối đa 60s
                 $.ajax({

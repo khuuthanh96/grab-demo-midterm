@@ -182,6 +182,20 @@ router.get("/request/accepted/:reqID", (req, res) => {
             data: {}
         })
     }, 60*1000)
-})
+});
 
+router.delete("/request/:id", (req, res) => {
+    request.findByIdAndRemove(req.params.id)
+    .then(() => {
+        res.json({
+            success: true,
+        })
+    })
+    .catch(err => {
+        console.log(err);
+        res.json({
+            success: false
+        })
+    });
+});
 module.exports = router;
