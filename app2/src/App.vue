@@ -2,9 +2,9 @@
   <div id="app">
     <b-container>
 
-        <Navbar v-show="isLogin" v-bind:user="user"/>
-        <Login v-show="!isLogin" v-on:login="setLogin"/> 
-        <Dashboard v-show="isLogin"/>
+        <Navbar v-if="isLogin" v-bind:user="user" v-on:logout="setLogin"/>
+        <Login v-if="!isLogin" v-on:login="setLogin" :getRefreshtoken="getRefreshtoken"/> 
+        <Dashboard v-if="isLogin" :getRefreshtoken="getRefreshtoken" :setLogin="setLogin"/>
 
     </b-container>
 
@@ -28,6 +28,9 @@
 import Dashboard from "./components/Dashboard.vue";
 import Navbar from "./components/Navbar.vue";
 import Login from "./components/Login.vue";
+import config from "./lib/config.json";
+const myConfig = config['dev'];
+
 export default {
   name: "app",
   components: {
@@ -43,8 +46,24 @@ export default {
   },
   methods: {
     setLogin(user) {
-      this.user = user;
-      this.isLogin = true;
+      this.user = user || null;
+      if(this.user) {
+        this.isLogin = true;      
+      }else {
+        this.isLogin = false;
+      }
+    },
+    async getRefreshtoken() {
+      const self = this;
+      await self.$http.post(`${myConfig.host}auth/refreshtoken`,{refreshToken: localStorage.refreshToken})
+      .then(res => {
+        localStorage.setItem('accessToken', res.data.accesstoken);
+      })
+      .catch(err => {
+        if(err.response.status === 401) {
+          self.isLogin = false
+        }
+      })
     }
   }
 };

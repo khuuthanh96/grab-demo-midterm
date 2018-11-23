@@ -18,7 +18,9 @@
 
 <script>
 import axios from "axios";
-import config from "../lib/config.js";
+import config from "../lib/config.json";
+const myConfig = config['dev'];
+
 export default {
   name: 'login',
   data () {
@@ -31,7 +33,7 @@ export default {
   },
   methods: {
     login () {
-        axios.post(config.host + "auth/login", {email: this.email, password: this.password})
+        axios.post(myConfig.host + "auth/login", {email: this.email, password: this.password})
         .then(res => {
             localStorage.accessToken = res.data.accessToken;
             localStorage.refreshToken = res.data.refreshToken;
