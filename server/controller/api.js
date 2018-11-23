@@ -3,7 +3,7 @@ const router  = express.Router();
 
 const user = require("../models/user");
 const request = require("../models/request");
-
+const {findNearestDriver} = require("../lib/haversineService");
 const { STATE } = require("../lib/const");
 
 router.get("/", (req, res) => res.json({message: `Hello ${req.user.name}`}));
@@ -209,9 +209,14 @@ router.put("/request/located/:id", (req, res) => {
 
     request.findByIdAndUpdate(id, { $set: {"locatedLat": lat, "locatedLng": lng, "state": myState}})
     .then(_ => {
-        res.json({
-            success: true
-        })
+        return user.find({"active": true, "roles": "driver"});
+    })
+    .then(driverList => {
+        const qualifyDriver = findNearestDriver(driverList, { lat, lng });
+        return request.findByIdAndUpdate(id, { $set: {"driverName": qualifyDriver.name, "driverID": qualifyDriver.id }})
+    })
+    .then(_ => {
+        res.json({success: true})
     })
     .catch(err =>  {
         console.log(err)

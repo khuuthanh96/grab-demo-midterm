@@ -107,6 +107,7 @@ $("#find-button").click(function(event)
 
     var data = {
         clientName: $("#clientName").val(),
+        clientID: JSON.parse(getCookie("user"))._id,
         address: $("#address").val(),
         phone: $("#phone").val(),
         note: $("#note").val()
@@ -125,9 +126,8 @@ $("#find-button").click(function(event)
             //nếu tạo request thành công: 
             if(data.success) {
                 myRequest = data.data;
+                //counting request
                 var myCount = 60;
-                console.log(myCount)
-
                 var countInterval = setInterval(function() {
                     $("#result").text("Finding driver for you....." + myCount + "s left")
                     myCount -= 1
