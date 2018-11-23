@@ -33,8 +33,8 @@ $(document).ready(function(){
 
 $(window).bind('beforeunload', function() {
     $.ajax({
-        type: "DELETE",
-        url: "http://localhost:8000/api/request/" + myRequest._id,
+        type: "PUT",
+        url: "http://localhost:8000/api/request/delete/" + myRequest._id,
         data: {},
         dataType: "json",
         contentType: "application/json",
@@ -125,7 +125,14 @@ $("#find-button").click(function(event)
             //nếu tạo request thành công: 
             if(data.success) {
                 myRequest = data.data;
-                $("#result").text("Loading.....")
+                var myCount = 60;
+                console.log(myCount)
+
+                var countInterval = setInterval(function() {
+                    $("#result").text("Finding driver for you....." + myCount + "s left")
+                    myCount -= 1
+                }, 1000);
+                count = 0;
                 //tạo 1 request long polling để đợi server dữ liệu. tối đa 60s
                 $.ajax({
                     type: "GET",
@@ -137,9 +144,24 @@ $("#find-button").click(function(event)
                         xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
                     },
                     success: function(data) {
+                        clearInterval(countInterval)
                         if(data.success) {
                             $("#result").text("Success! Found driver " + data.data.driverName);
                         } else {
+                            $.ajax({
+                                type: "PUT",
+                                url: "http://localhost:8000/api/request/delete/" + myRequest._id,
+                                data: {},
+                                dataType: "json",
+                                contentType: "application/json",
+                                beforeSend: function(xhr) {
+                                    xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+                                },
+                                success: function() {
+                                    console.log("cancel request successful!")
+                                }
+
+                            })
                             $("form").fadeIn(500);
                             $(".wrapper").removeClass("form-success");
                             $("#result").text("Booking")
