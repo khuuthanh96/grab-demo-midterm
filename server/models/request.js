@@ -40,6 +40,19 @@ class Request extends RequestModel {
             return false;
         }
     }
+
+    static async findLocatedByDriverID(uID) {
+        const state = STATE["DA_DINH_VI"];
+        const req = await Request.find({"state": state, "driverID": uID})
+        .catch(err => console.log(err))
+        if(typeof req == "undefined") return false;
+
+        if(req.driverID === uID) {
+            return req;
+        } else {
+            return false;
+        }
+    }
 };
 
 module.exports = Request;
