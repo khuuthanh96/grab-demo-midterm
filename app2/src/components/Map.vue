@@ -41,7 +41,7 @@ export default {
 <style>
 .map {
     margin-top: 10px;
-    witdth: 100%;
+    width: 100%;
 }
 </style>
 

@@ -1,0 +1,13 @@
+{
+    "success": true,
+    "data": [
+    {"_id":{"$oid":"5bec599fa921393ca2c33c29"},"updatedAt":{"$date":"2018-11-23T15:58:35.181Z"},"createdAt":{"$date":"2018-11-14T17:21:35.727Z"},"clientName":"Tèo Ca Ca","address":"123 Lý Thường Kiệt","phone":"123456789","note":"","state":1,"__v":0,"locatedLat":10.7595914,"locatedLng":106.6282958,"driverID":{"$oid":"5be55ebae80dac142ebecd7b"},"driverName":"taixe 2"},
+    {"_id":{"$oid":"5bec5a21c8fbe03cd06ea34f"},"updatedAt":{"$date":"2018-11-23T13:51:06.457Z"},"createdAt":{"$date":"2018-11-14T17:23:45.864Z"},"clientName":"Tèo Ca Ca","address":"79 Tân hòa đông, P14, Q.6","phone":"123456789","note":"","state":1,"__v":0,"locatedLat":10.7570231,"locatedLng":106.6317978},
+    {"_id":{"$oid":"5bed3d75d54ab20ae1132f59"},"updatedAt":{"$date":"2018-11-23T13:14:44.832Z"},"createdAt":{"$date":"2018-11-15T09:33:41.425Z"},"clientName":"Tèo","address":"31 bà hạt","phone":"0123456789","note":"cho tui voi","state":5,"__v":0},
+    {"_id":{"$oid":"5bed3e18d54ab20ae1132f5a"},"updatedAt":{"$date":"2018-11-23T13:14:49.647Z"},"createdAt":{"$date":"2018-11-15T09:36:24.620Z"},"clientName":"Tèo Ca Ca","address":"55 cao thắng, Q.10","phone":"123456789","note":"","state":0,"__v":0},
+    {"_id":{"$oid":"5bf7fff23a4d91512a685ddc"},"updatedAt":{"$date":"2018-11-23T13:29:07.258Z"},"createdAt":{"$date":"2018-11-23T13:26:10.182Z"},"clientName":"Tèo Ca Ca","address":"123 bến vân đồn, Q.4","phone":"0123456789","note":"tòa nhà goldview","state":0,"__v":0},
+    {"_id":{"$oid":"5bf8009c3a4d91512a685ddd"},"updatedAt":{"$date":"2018-11-23T13:29:02.351Z"},"createdAt":{"$date":"2018-11-23T13:29:00.016Z"},"clientName":"Tèo Ca Ca","address":"55 bến vân đồn, Q.4","phone":"0123456789","note":"tòa nhà goldview 123","state":0,"__v":0},
+    {"_id":{"$oid":"5bf8076908806257a994b065"},"updatedAt":{"$date":"2018-11-23T13:58:01.380Z"},"createdAt":{"$date":"2018-11-23T13:58:01.380Z"},"clientName":"Tèo Ca Ca","address":"55 bến vân đồn, Q.4","phone":"0123456789","note":"tòa nhà goldview 123","state":0,"__v":0},
+    {"_id":{"$oid":"5bf80891a1bbbb5827a11136"},"updatedAt":{"$date":"2018-11-23T14:02:57.220Z"},"createdAt":{"$date":"2018-11-23T14:02:57.220Z"},"clientName":"Tèo Ca Ca","address":"55 bến vân đồn, Q.4","phone":"0123456789","note":"tòa nhà goldview 123","state":0,"__v":0}
+    ]
+}
