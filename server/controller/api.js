@@ -49,8 +49,57 @@ router.put("/user/active", (req, res) => {
     });
 });
 
-router.get("/user/logout", (req, res) => {
-    user.findByIdAndUpdate(req.user._id, { $set: { "status": false }})
+router.put("/user/status", (req, res) => {
+    if(typeof req.body.status != "boolean") {
+        res.json({
+            success: false,
+            message: "dữ liệu không hợp lệ"
+        })
+        return
+    }
+
+    user.findByIdAndUpdate(req.user._id, { $set: { "status": req.body.status }})
+    .then(() => {
+        res.json({
+            success: true,
+        })
+    })
+    .catch(err => {
+        console.log("Set active for user findByIdAndUpdate: ", err);
+        res.json({
+            success: false,
+            message: "dữ liệu không hợp lệ"
+        })
+    });
+});
+
+router.get("/user/driver/ready/:uID", (req, res) => {
+    const id = req.params.id;
+    const myInterval = setInterval(async () => {
+        const myReq = await findLocatedByDriverID(id);
+        if(myReq) {
+            res.json({
+                success: true,
+                data: myReq
+            });
+            clearInterval(myInterval);
+            clearTimeout(myTimeout)
+            return
+        }
+    }, 4000);
+ 
+    const myTimeout = setTimeout(() => {
+        clearInterval(myInterval);
+        request.findByIdAndRemove(id);
+        res.json({
+            success: false,
+            data: {}
+        })
+    }, 60*1000)
+});
+
+router.put("/user/logout", (req, res) => {
+    user.findByIdAndUpdate(req.user._id, { $set: { "active": false }})
     .then(() => {
         res.json({
             success: true,
