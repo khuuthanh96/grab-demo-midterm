@@ -1,6 +1,13 @@
+//var myVar = setInterval(requestFileJSON, 3000);
+var myVar;
+var dataRequest = {};
+var dataDriver = {};
+myVar = setInterval(requestFileJSON, 3000); // Get File JSON
+
 $(document).ready(function(){
     setCookie("accesstoken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmU1NWViYWU4MGRhYzE0MmViZWNkN2IiLCJlbWFpbCI6InRhaXhlMkBnbWFpbC5jb20iLCJuYW1lIjoidGFpeGUgMiIsImFkZHJlc3MiOiI1NDMgc2ZhcywgUDMsIFEuMTAiLCJwaG9uZSI6IjAxMjM0NTYiLCJfX3YiOjAsImxvbmciOjEwNi42ODQwOTI4LCJsYXQiOjEwLjc1OTM0NzksInN0YXR1cyI6dHJ1ZSwiYWN0aXZlIjp0cnVlLCJyb2xlcyI6ImRyaXZlciIsInNleCI6Im1hbGUiLCJpYXQiOjE1NDM0MTk5NzYsImV4cCI6MTU0MzQyMzU3Nn0.I7pXanNRhEHm9ul44w6CHGdlvKkyWVNL5-bJJHk05PE",1);
     setCookie("refreshtoken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjViZTU1ZWJhZTgwZGFjMTQyZWJlY2Q3YiIsImVtYWlsIjoidGFpeGUyQGdtYWlsLmNvbSIsIm5hbWUiOiJ0YWl4ZSAyIiwiYWRkcmVzcyI6IjU0MyBzZmFzLCBQMywgUS4xMCIsInBob25lIjoiMDEyMzQ1NiIsIl9fdiI6MCwibG9uZyI6MTA2LjY4NDA5MjgsImxhdCI6MTAuNzU5MzQ3OSwic3RhdHVzIjp0cnVlLCJhY3RpdmUiOnRydWUsInJvbGVzIjoiZHJpdmVyIiwic2V4IjoibWFsZSJ9LCJydCI6dHJ1ZSwiaWF0IjoxNTQzNDE5OTc2LCJleHAiOjE1NDQwMjQ3NzZ9.b_MAWXpSEPPBMYPOGm_qVJ_EdaaAT9-dFpI4kg_PMJA",7);
+    /*
     $(window).bind('beforeunload', function() {
         $.ajax({
             type: "PUT",
@@ -20,6 +27,7 @@ $(document).ready(function(){
             }
         })
     })
+    */
     var driver = true;
     var request = false;
     $("a.driver").click(function(event){
@@ -101,9 +109,9 @@ $(document).ready(function(){
         })
     });
     //alert("hello[]");
-    
+
     $.getJSON("grab-db-users.json", function(json) {
-        console.log(json); // this will show the info it in firebug console
+        //console.log(json); // this will show the info it in firebug console
         items=[];  
         for(i in json)
         {
@@ -141,11 +149,11 @@ $(document).ready(function(){
                 $("#driver_tbody").append(sum);
             }
         }
-        console.log(items);
+        //console.log(items);
     });
 
     $.getJSON("grab-db-request.json", function(json) {
-        console.log(json); // this will show the info it in firebug console
+        //console.log(json); // this will show the info it in firebug console
         items=[];  
         for(i in json)
         {
@@ -193,24 +201,9 @@ $(document).ready(function(){
                 $("#request_tbody").append(sum);
             }
         }
-        console.log(items);
+        //console.log(items);
 
     });
-    /*
-    $.getJSON("data.json", function(json) {
-        console.log(json); // this will show the info it in firebug console
-        items=[]; 
-        for(i in json)
-        {
-            var key = i;
-            var val = json[i];
-            items.push('<li id="' + key + '">' + val + '</li>');  
-        }
-        console.log(items);
-        alert(json[0]);
-
-    });
-    */
     
 });
 $("#signin-button").click(function(event)
@@ -286,76 +279,45 @@ $("#EN_language-button").click(function(event)
     $(".driver_form tr th:nth-child(4)").text("Phone Number");
     $(".driver_form tr th:nth-child(5)").text("Note");
 });
-/*
-$(document).ready(function() {
+function requestFileJSON()
+{
+    $.ajax({
+        type: "GET",
+        url: "http://localhost:8000/api/request",
+        data: {},
+        dataType: "json",
+        success: function(data, status) {
+            alert(data);
 
-    $.getJSON('data.json', function(data) 
-    {
-        console.log("It work!")
-        $.each(data.users, function(key, val) {
-            // alert(val[0].clientName);
-            // alert(val[0].driverName);
-         })
+            dataRequest = data;
+            alert(dataRequest);
+        },
+        error: function(jqXhr) {
+            alert(JSON.stringify(jqXhr));
+            alert("Error! Can't read driver.json");
+        }
     });
-});
-*/
-/*
-function doPoll(){
-    $.post('ajax/test.html', function(data) {
-        alert(data);  // process results here
-        setTimeout(doPoll,5000);
+    $.ajax({
+        type: "GET",
+        url: "http://localhost:8000/api/user/driver",
+        data: {},
+        dataType: "json",
+        success: function(data, status) {
+            alert(data);
+
+            dataDriver = data;
+            alert(dataDriver);
+        },
+        error: function(jqXhr) {
+            alert(JSON.stringify(jqXhr));
+            alert("Error! Can't read driver.json");
+        }
     });
 }
-*/
-//var json = require('./data.json');
 
-/*
-$.getJSON("data.json", function(json) {
-    console.log(json); // this will show the info it in firebug console
-});
-*/
-/*
-var json = $.getJSON("test.json");
-var data = eval("(" +json.responseText + ")");
-document.write(data["one"]);
-alert(data);
-*/
-
-
-/*
-$(document).ready(function () {
-    var data;
-    $.ajax({
-        dataType: "json",
-        url: 'data.json',
-        data: data,
-        success: function (data) {
-            // begin accessing JSON data here
-            console.log(data[0].clientName);
-        }
-    });
-});
-*/
-/*
-$(document).ready(function () {
-    var data;
-    $.ajax({
-        dataType: "json",
-        url: './../data/data.json',
-        data: data,
-        success: function (data) {
-            // begin accessing JSON data here
-            var getData = $.parseJSON(data);
-            console.log(getData[0].clientName);
-            alert(getData[0].clientName);
-        },
-        error: function ()
-        {
-            alert("Error read file");
-        }
-    });
-});
-*/
+function myStopFunction() {
+    clearInterval(myVar);
+}
 
 function setCookie(name, value, days) {
     var expires;

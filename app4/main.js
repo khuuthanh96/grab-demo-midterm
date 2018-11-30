@@ -134,10 +134,6 @@ $(document).ready(function()
             checkStatus = false;
         }
     });
-    $("#yourLocation").click(function(event)
-    {
-        $("#yourLocation").addClass("none");
-    });
 });
 var map; // Khởi tạo các biến global mã mình sẽ sử dụng.
 var directionsDisplay;
@@ -204,7 +200,7 @@ function initMap()
     //document.getElementById('source').addEventListener('change', onChangeHandler);    // Tạo sự kiện khi chọn điểm xuất phát
     document.getElementById('destination').addEventListener('change', onChangeHandler);    // Tạo sự kiện khi chọn điểm đích
     document.getElementById('mode').addEventListener('change', onChangeHandler);    
-    document.getElementById('yourLocation').addEventListener('click', onChangeHandler);    
+    document.getElementById('signin-button').addEventListener('click', onChangeHandler);    
 } 
 
 function calculateAndDisplayRoute(directionsService, directionsDisplay) 
