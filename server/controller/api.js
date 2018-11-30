@@ -98,8 +98,8 @@ router.get("/user/driver/ready/:uID", (req, res) => {
     }, 60*1000)
 });
 
-router.get("/user/logout", (req, res) => {
-    user.findByIdAndUpdate(req.user._id, { $set: { "status": false }})
+router.put("/user/logout", (req, res) => {
+    user.findByIdAndUpdate(req.user._id, { $set: { "active": false }})
     .then(() => {
         res.json({
             success: true,
