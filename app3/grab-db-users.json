@@ -1,0 +1,13 @@
+{
+    "success": true,
+    "data": [
+    {"_id":{"$oid":"5be55ebae80dac142ebecd79"},"email":"admin@gmail.com","password":"$2b$08$nIRR2SUlLkNtFOv0D2E2be1P/OuT5flIarJFUVbOfzyc6OWBqpEyu","name":"super admin","address":"123 abc, P3, Q.1","phone":"0123456","status":true,"active":false,"roles":"admin","sex":"male","__v":0},
+    {"_id":{"$oid":"5be55ebae80dac142ebecd7a"},"email":"taixe1@gmail.com","password":"$2b$08$8PQZycG5hVogJF1sB8zac.Wl7NkhKR.Gt4H44iiYxUCaCXujyiC5G","name":"taixe 1","address":"321 cba, P1, Q.3","phone":"0123456","status":true,"active":false,"roles":"driver","sex":"male","__v":0},
+    {"_id":{"$oid":"5be55ebae80dac142ebecd7b"},"email":"taixe2@gmail.com","password":"$2b$08$TEYY9hfO679lQBo3WFvejOmJgweZBHvDusi0XqOJCukTYHen1n04W","name":"taixe 2","address":"543 sfas, P3, Q.10","phone":"0123456","status":false,"active":true,"roles":"driver","sex":"male","lat":10.7593479,"long":106.6840928,"__v":0},
+    {"_id":{"$oid":"5be55ebae80dac142ebecd7c"},"email":"taixe3@gmail.com","password":"$2b$08$3nsub3ecYIncCRZFkMMiZOVlVoC7JYoPE27OH.Ym1NrMluxmbtPE.","name":"taixe 3","address":"76 vsf, P14, Q.6","phone":"0123456","status":false,"active":true,"roles":"driver","sex":"male","lat":10.7646931,"long":106.6875238,"__v":0},
+    {"_id":{"$oid":"5bec413b5c5dcb35f6208e6c"},"email":"user1@gmail.com","password":"$2b$08$fhdCUkG40ms085lVehrojeVCGgoUKO7KaJnj36ipMzQOnnUr4u2Ru","name":"Tèo Ca Ca","address":"79 Tân Hòa Đông, P14, Q.6","phone":"0123456789","long":0,"lat":0,"status":true,"active":true,"roles":"user","sex":"male","__v":0},
+    {"_id":{"$oid":"5bec413b5c5dcb35f6208e6d"},"email":"user2@gmail.com","password":"$2b$08$nHZ26kSPzP6TW8hVkLE0vOyd8npMdEFnFN3ubvk0fIz647e45SmwO","name":"Tà Ceo Ceo","address":"321 cba, P1, Q.3","phone":"0123456789","long":0,"lat":0,"status":false,"active":false,"roles":"user","sex":"male","__v":0},
+    {"_id":{"$oid":"5bec413b5c5dcb35f6208e6e"},"email":"user3@gmail.com","password":"$2b$08$N5o3JdiUt3gz/8SRu3Y.xeUZf4LUoDllDEwurxqOdJSkZftUIr5lq","name":"Tả Pí Lù","address":"543 sfas, P3, Q.10","phone":"0123456895","long":0,"lat":0,"status":false,"active":false,"roles":"user","sex":"male","__v":0},
+    {"_id":{"$oid":"5bec413b5c5dcb35f6208e6f"},"email":"user4@gmail.com","password":"$2b$08$pDtSOfwRwV4K6Qoxlj.T4eWmU9SwQYyLoPhleXQwhrzYwAX6nWZYW","name":"Tủ Pí Là","address":"76 vsf, P14, Q.6","phone":"0123451246","long":0,"lat":0,"status":false,"active":false,"roles":"user","sex":"male","__v":0}
+    ]
+}
