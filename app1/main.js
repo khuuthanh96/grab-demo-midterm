@@ -34,8 +34,8 @@ $(document).ready(function(){
 $(window).bind('beforeunload', function() {
     $.ajax({
         type: "PUT",
-        url: "http://localhost:8000/api/request/delete/" + myRequest._id,
-        data: {},
+        url: "http://localhost:8000/api/request/state/" + myRequest._id,
+        data: JSON.stringify({ "state": "HUY_YEU_CAU" }),
         dataType: "json",
         contentType: "application/json",
         beforeSend: function(xhr) {
