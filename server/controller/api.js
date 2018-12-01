@@ -129,32 +129,33 @@ router.put("/user/driver/cancel/:uID", (req, res) => {
             return
         }
 
+        //thêm id của tài xế thực hiện request vào danh sách từ chối
+        const _driverID = mongoose.mongo.ObjectID(driverID); //ép kiểu về objectID
+        myreq.cancelled.push(_driverID);
+
         //lấy danh sách tài xê và loại bỏ tài xế từ chối khỏi danh sách định vị
         const cancelledListLength = myreq.cancelled.length;
-
         return user.find({"active": true, "roles": "driver"})
         .then(driverList => {
-            for (let i = 0; i < driverList.length; i++) {
-                if(JSON.stringify(driverList[i]._id) == JSON.stringify(myreq.driverID)) {
-                    driverList.splice(i, 1);
-                    break;
-                };
-
-                //tìm xem danh sách tài xế đã từ chối và loại bỏ khoi danh sách định vị
-                if(cancelledListLength > 0){
+            //lọc lại danh sách để gởi yêu cầu đặt xe
+            if(cancelledListLength > 0){
+                for (let i = 0; i < driverList.length; i++) {
+                    //tìm xem danh sách tài xế đã từ chối và loại bỏ khoi danh sách định vị
                     for (let j = 0; j < cancelledListLength; j++) {
-                        if (JSON.stringify(myreq.cancelled[j]) == JSON.stringify(driverList[i])) {
+                        if (JSON.stringify(myreq.cancelled[j]) == JSON.stringify(driverList[i]._id)) {
                             driverList.splice(i, 1);
                         };
                     };
                 };
-            };
+            }
 
-            //thêm id của tài xế vào danh sách từ chối
-            const _driverID = mongoose.mongo.ObjectID(driverID); //ép kiểu về objectID
-            myreq.cancelled.push(_driverID);
             const qualifyDriver = findNearestDriver(driverList, { lat: myreq.locatedLat, lng: myreq.locatedLng });
-            return request.findByIdAndUpdate(myreq._id, { $set: {driverName: qualifyDriver.name, driverID: qualifyDriver.id,cancelled:myreq.cancelled, resend: myreq.resend+=1 }})
+
+            //nếu không tìm được thì response về người dùng
+            if(!qualifyDriver) return request.findByIdAndUpdate(myreq._id, { $set: {driverName: "", driverID: null,cancelled:myreq.cancelled, resend: myreq.resend+=1 }});
+
+
+            return request.findByIdAndUpdate(myreq._id, { $set: {driverName: qualifyDriver.name, driverID: qualifyDriver.id,cancelled:myreq.cancelled, resend: myreq.resend+=1 }});
         })
         .then(_ => {
             res.json({success: true})
