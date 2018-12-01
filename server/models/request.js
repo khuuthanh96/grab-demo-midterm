@@ -12,7 +12,8 @@ const requestSchema = mongoose.Schema({
     state: { type: Number },
     locatedLat: { type: Number },
     locatedLng: { type: Number },
-
+    cancelled: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    resend: { type: Number, default: 0 }
 }, {timestamps: true});
 
 const RequestModel = mongoose.model('Request', requestSchema);

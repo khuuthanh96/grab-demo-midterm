@@ -1,6 +1,8 @@
 const haversine = require("haversine");
 
 const findNearestDriver = (driverList, clientPoint) => {
+    if(driverList.length < 1) return null; //kiểm tra mảng rỗng trả về null
+
     let distanceArray = [];
     driverList.forEach(driver => {
         const start = {

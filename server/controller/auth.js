@@ -19,7 +19,7 @@ router.post("/login", (req, res) => {
             }
 
             user.status = true;
-            User.findByIdAndUpdate(user._id, { $set: {"status": true}})
+            User.findByIdAndUpdate(user._id, { $set: {"active": true}})
             .catch(err => console.log("user status findByIdAndUpdate: ", err));
             
             const accessToken = await sign(user, "1h");
