@@ -1,4 +1,4 @@
-var checkStatus = false;
+var checkStatus = true;
 $(document).ready(function()
 {
     setCookie("accesstoken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmU1NWViYWU4MGRhYzE0MmViZWNkN2IiLCJlbWFpbCI6InRhaXhlMkBnbWFpbC5jb20iLCJuYW1lIjoidGFpeGUgMiIsImFkZHJlc3MiOiI1NDMgc2ZhcywgUDMsIFEuMTAiLCJwaG9uZSI6IjAxMjM0NTYiLCJfX3YiOjAsImxvbmciOjEwNi42ODQwOTI4LCJsYXQiOjEwLjc1OTM0NzksInN0YXR1cyI6dHJ1ZSwiYWN0aXZlIjp0cnVlLCJyb2xlcyI6ImRyaXZlciIsInNleCI6Im1hbGUiLCJpYXQiOjE1NDM0MTk5NzYsImV4cCI6MTU0MzQyMzU3Nn0.I7pXanNRhEHm9ul44w6CHGdlvKkyWVNL5-bJJHk05PE",1);
@@ -31,12 +31,27 @@ $(document).ready(function()
     });
     $(".signup_avatar").click(function(event){
         event.stopPropagation();
-        $(".container_signin").removeClass("none");
-        $(".screenWelcome").removeClass("none");
+        $.ajax({
+            type: "PUT",
+            url: "http://localhost:8000/api/user/logout",
+            data: {},
+            dataType: "json",
+            contentType: "application/json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+            },
+            success: function(data, status) {
+                $(".container_signin").removeClass("none");
+                $(".screenWelcome").removeClass("none");
+                setCookie("success", JSON.stringify(data.success), 7);
+                setCookie("message", data.message, 7);
+            },
+            error: function(jqXhr) {
+                console.log(JSON.stringify(jqXhr));
+                alert("Don't Sign Up! Sorry!");
+            }
+        })
     });   
-    if(typeof getCookie("accesstoken") != "string") {
- 
-    }
     $("#signin-button").click(function(event)
     {
         event.preventDefault();
@@ -60,10 +75,7 @@ $(document).ready(function()
                 setCookie("refreshtoken", data.refreshToken, 7);
                 setCookie("user", JSON.stringify(data.user), 7);
 
-                //set default data
-                $("#clientName").val(data.user.name),
-                $("#address").val(data.user.address),
-                $("#phone").val(data.user.phone)
+                $(".username").text($("#name").val());
             },
             error: function(jqXhr) {
                 $(".btn-signin").addClass("active");
@@ -83,6 +95,7 @@ $(document).ready(function()
         if(checkStatus === false)
         {
             $("#status").addClass("statusClicked");
+            $("#status").text("READY");
             checkStatus = true;
             var data = {
                 "status": true
@@ -131,6 +144,7 @@ $(document).ready(function()
         else
         {
             $("#status").removeClass("statusClicked");
+            $("#status").text("STAND BY");
             checkStatus = false;
         }
     });

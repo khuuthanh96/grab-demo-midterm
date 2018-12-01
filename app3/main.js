@@ -69,6 +69,9 @@ $(document).ready(function(){
             data: {},
             dataType: "json",
             contentType: "application/json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+            },
             success: function(data, status) {
                 $(".container_signin").removeClass("none");
                 $(".screenWelcome").removeClass("none");
@@ -78,16 +81,12 @@ $(document).ready(function(){
                 runRequestFileJSON = "false";
             },
             error: function(jqXhr) {
-                $("#msg").text(jqXhr.responseJSON.message.message);
-                setTimeout(() => {
-                    $("#msg").text("");
-                }, 3000)
+                console.log(JSON.stringify(jqXhr));
+                alert("Don't Sign Up! Sorry!");
             }
         })
     }); 
-    if(typeof getCookie("accesstoken") != "string") {
-   
-    }
+
     $("#signin-button").click(function(event)
     {
         

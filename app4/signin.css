@@ -337,6 +337,20 @@ form button:hover
 {
     color: #53e3a6;
 }
+.username
+{
+    position: absolute;
+    top: 0;
+    right: 122px;
+    height: 32px;
+    width: 200px;
+    font-size: 22px;
+    text-align: center;
+    color: #fff;
+    cursor: pointer;
+    background-color: #16a085;
+    /* background-color: #16a085; */
+}
 @media (max-height: 510px)
 {
     .btn-signin
