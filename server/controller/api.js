@@ -6,7 +6,14 @@ const request = require("../models/request");
 const {findNearestDriver} = require("../lib/haversineService");
 const { STATE } = require("../lib/const");
 
+const mongoose = require("mongoose");
+
+//số lần gửi lại yêu cầu của 1 request khi bị từ chối
+const RESEND = 5;
+
 router.get("/", (req, res) => res.json({message: `Hello ${req.user.name}`}));
+
+//=========================================USER=========================================
 
 router.get("/user/driver", (req, res) => {
     user.find()
@@ -98,6 +105,71 @@ router.get("/user/driver/ready/:uID", (req, res) => {
     }, 60*1000)
 });
 
+router.put("/user/driver/cancel/:uID", (req, res) => {
+    const driverID = req.params.uID;
+    const state = STATE["DA_DINH_VI"];
+    //tìm request với thông tin tài xế và trạng thái
+    request.findOne({driverID, state, resend: { $lt: RESEND }} )
+    .then(myreq => {
+        if (!myreq) {
+            res.json({
+                success: false,
+                message: "không tìm thấy request cho driverid"
+            });
+            return
+        }
+
+        //người cuối cùng từ chối
+        if (myreq.resend === RESEND - 1) {
+            myreq.cancelled.push(driverID)
+
+            request.findByIdAndUpdate(myreq._id, { $set: {state: STATE["TAI_XE_HUY_YEU_CAU"], cancelled: myreq.cancelled, resend: myreq.resend+=1 }})
+            .catch(err => console.log(err))
+            res.json({success: true})
+            return
+        }
+
+        //lấy danh sách tài xê và loại bỏ tài xế từ chối khỏi danh sách định vị
+        const cancelledListLength = myreq.cancelled.length;
+
+        return user.find({"active": true, "roles": "driver"})
+        .then(driverList => {
+            for (let i = 0; i < driverList.length; i++) {
+                if(JSON.stringify(driverList[i]._id) == JSON.stringify(myreq.driverID)) {
+                    driverList.splice(i, 1);
+                    break;
+                };
+
+                //tìm xem danh sách tài xế đã từ chối và loại bỏ khoi danh sách định vị
+                if(cancelledListLength > 0){
+                    for (let j = 0; j < cancelledListLength; j++) {
+                        if (JSON.stringify(myreq.cancelled[j]) == JSON.stringify(driverList[i])) {
+                            driverList.splice(i, 1);
+                        };
+                    };
+                };
+            };
+
+            //thêm id của tài xế vào danh sách từ chối
+            const _driverID = mongoose.mongo.ObjectID(driverID); //ép kiểu về objectID
+            myreq.cancelled.push(_driverID);
+            const qualifyDriver = findNearestDriver(driverList, { lat: myreq.locatedLat, lng: myreq.locatedLng });
+            return request.findByIdAndUpdate(myreq._id, { $set: {driverName: qualifyDriver.name, driverID: qualifyDriver.id,cancelled:myreq.cancelled, resend: myreq.resend+=1 }})
+        })
+        .then(_ => {
+            res.json({success: true})
+            return
+        })
+    })
+    .catch(err =>  {
+        console.log(err)
+        res.json({
+            success: false,
+            message: "dữ liệu không hợp lệ"
+        })
+    })
+});
+
 router.put("/user/logout", (req, res) => {
     user.findByIdAndUpdate(req.user._id, { $set: { "active": false }})
     .then(() => {
@@ -138,6 +210,8 @@ router.put("/user/location", (req, res) => {
         })
     });
 });
+
+//=========================================REQUEST=========================================
 
 router.get("/request", (req, res) => {
     const state = req.query.state;
