@@ -80,10 +80,38 @@ router.put("/user/status", (req, res) => {
     });
 });
 
+router.put("/user/driver/accept/:uID", (req, res) => {
+    const driverID = req.params.uID;
+    const state = STATE["DA_DINH_VI"];
+    request.findOne({driverID, state})
+    .then(myreq => {
+        if (!myreq) {
+            res.json({
+                success: false,
+                message: "không tìm thấy request cho driverid"
+            });
+            return
+        }
+
+        return request.findByIdAndUpdate(myreq._id, { $set: { state: STATE["XE_NHAN"]}})
+        .then(_ => {
+            res.json({success: true})
+        })
+    })
+    .catch(err => {
+        console.log(err)
+        res.json({
+            success: false,
+            message: "không tìm thấy request cho driverid"
+        });
+        return
+    })
+})
+
 router.get("/user/driver/ready/:uID", (req, res) => {
     const id = req.params.id;
     const myInterval = setInterval(async () => {
-        const myReq = await findLocatedByDriverID(id);
+        const myReq = await request.findLocatedByDriverID(id);
         if(myReq) {
             res.json({
                 success: true,
@@ -385,13 +413,22 @@ router.get("/request/accepted/:reqID", (req, res) => {
     const myInterval = setInterval(async () => {
         const myReq = await request.findRequestAcceptedByID(id);
         if(myReq) {
-            res.json({
-                success: true,
-                data: myReq
-            });
-            clearInterval(myInterval);
-            clearTimeout(myTimeout)
-            return
+            request.findByIdAndUpdate(id, {$set: { state: STATE["DANG_DI_CHUYEN"]}})
+            .then(_ => {
+                res.json({
+                    success: true
+                });
+                clearInterval(myInterval);
+                clearTimeout(myTimeout)
+                return
+            })
+            .catch(err => {
+                console.log(err)
+                res.json({ success: false })
+                clearInterval(myInterval);
+                clearTimeout(myTimeout)
+                return
+            })
         }
     }, 4000)
  
