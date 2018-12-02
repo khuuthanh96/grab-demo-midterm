@@ -3,7 +3,7 @@ var driver_lat;
 var driver_long;
 var click_lat;
 var click_long;
-var myVar = setInterval(requestAcceptOrder, 6000); // hello
+var myVar = setInterval(requestAcceptOrder, 60000); // hello
 var runRequestAcceptOrder = false;
 var addressInRequest; // hello // cover for userLocation
 $(document).ready(function()
@@ -407,6 +407,29 @@ function placeMarkerAndPanTo(latLng, map) {
     else
     {
         $(".notice").addClass("none");
+        //hello
+        var data = {
+            "lat": driver_lat,
+            "long": driver_long
+        }
+        $.ajax({
+            type: "PUT",
+            url: "http://localhost:8000/api/user/location",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+            },
+            success: function(data, status) {
+                setCookie("success", JSON.stringify(data.success), 7);
+                setCookie("message", JSON.stringify(data.message), 7);
+            },
+            error: function(jqXhr) {
+                console.log(JSON.stringify(jqXhr));
+                alert("Don't Update Driver Locaion! Sorry!");
+            }
+        })
     }
 }
 function calculateAndDisplayRoute(directionsService, directionsDisplay) 
