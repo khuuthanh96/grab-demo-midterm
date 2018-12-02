@@ -1,8 +1,11 @@
 var checkStatus = true;
+var user_lat;
+var user_long;
 $(document).ready(function()
 {
     setCookie("accesstoken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmU1NWViYWU4MGRhYzE0MmViZWNkN2IiLCJlbWFpbCI6InRhaXhlMkBnbWFpbC5jb20iLCJuYW1lIjoidGFpeGUgMiIsImFkZHJlc3MiOiI1NDMgc2ZhcywgUDMsIFEuMTAiLCJwaG9uZSI6IjAxMjM0NTYiLCJfX3YiOjAsImxvbmciOjEwNi42ODQwOTI4LCJsYXQiOjEwLjc1OTM0NzksInN0YXR1cyI6dHJ1ZSwiYWN0aXZlIjp0cnVlLCJyb2xlcyI6ImRyaXZlciIsInNleCI6Im1hbGUiLCJpYXQiOjE1NDM0MTk5NzYsImV4cCI6MTU0MzQyMzU3Nn0.I7pXanNRhEHm9ul44w6CHGdlvKkyWVNL5-bJJHk05PE",1);
     setCookie("refreshtoken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjViZTU1ZWJhZTgwZGFjMTQyZWJlY2Q3YiIsImVtYWlsIjoidGFpeGUyQGdtYWlsLmNvbSIsIm5hbWUiOiJ0YWl4ZSAyIiwiYWRkcmVzcyI6IjU0MyBzZmFzLCBQMywgUS4xMCIsInBob25lIjoiMDEyMzQ1NiIsIl9fdiI6MCwibG9uZyI6MTA2LjY4NDA5MjgsImxhdCI6MTAuNzU5MzQ3OSwic3RhdHVzIjp0cnVlLCJhY3RpdmUiOnRydWUsInJvbGVzIjoiZHJpdmVyIiwic2V4IjoibWFsZSJ9LCJydCI6dHJ1ZSwiaWF0IjoxNTQzNDE5OTc2LCJleHAiOjE1NDQwMjQ3NzZ9.b_MAWXpSEPPBMYPOGm_qVJ_EdaaAT9-dFpI4kg_PMJA",7);
+    /*
     $(window).bind('beforeunload', function() {
         $.ajax({
             type: "PUT",
@@ -22,6 +25,7 @@ $(document).ready(function()
             }
         })
     })
+    */
     $(".btn-signin").click(function(event){
         event.stopPropagation();
         $(".btn-signin").removeClass("active");
@@ -87,7 +91,31 @@ $(document).ready(function()
                     $("#msg").text("");
                 }, 3000)
             }
+        });
+        /*
+        $.ajax({
+            type: "PUT",
+            url: "http://localhost:8000/api/user/location",
+            data: {},
+            dataType: "json",
+            contentType: "application/json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+            },
+            success: function(data, status) {
+                setCookie("success", JSON.stringify(data.success), 7);
+                setCookie("message", data.message, 7);
+                user_lat = data.lat;
+                user_long = data.long;
+                alert(user_lat);
+                alert(user_long);
+            },
+            error: function(jqXhr) {
+                console.log(JSON.stringify(jqXhr));
+                alert("Error! Don't Get User Location");
+            }
         })
+        */
     });
     //console.log(getCookie("accesstoken"));
     $("#status").click(function(event)
@@ -148,6 +176,51 @@ $(document).ready(function()
             checkStatus = false;
         }
     });
+    $(".yes_accept").click(function(event)
+    {
+        
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8000/api/user/driver/ready/" + JSON.parse(getCookie("user"))._id,
+            data: {},
+            dataType: "json",
+            contentType: "application/json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+            },
+            success: function(data, status) {
+                $(".accept").addClass("none");
+                alert("Hello");
+                console.log(data);
+            },
+            error: function(jqXhr) {
+                console.log(JSON.stringify(jqXhr));
+                alert("Don't Accept! Sorry!");
+            }
+        })
+    });
+    $(".no_accept").click(function(event) // hello
+    {
+        $.ajax({
+            type: "PUT",
+            url: "http://localhost:8000/api/user/driver/cancel/" + JSON.parse(getCookie("user"))._id,
+            data: {},
+            dataType: "json",
+            contentType: "application/json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+            },
+            success: function(data, status) {
+                $(".accept").addClass("none");
+                setCookie("success", JSON.stringify(data.success), 7);
+                $(".accept").addClass("none");
+            },
+            error: function(jqXhr) {
+                console.log(JSON.stringify(jqXhr));
+                alert("Don't Accept! Sorry!");
+            }
+        })
+    });
 });
 var map; // Khởi tạo các biến global mã mình sẽ sử dụng.
 var directionsDisplay;
@@ -163,27 +236,8 @@ function initMap()
         zoom: 16,    // tỉ lệ phóng bản đồ
         center: lat_lng   
     });
-    var checkOnLocation = false;
-    while (checkOnLocation === false)
-    {
-        if (navigator.geolocation)
-        {
-            checkOnLocation = true;
-        }
-        else
-        {
-            alert("Please turn on your location!");
-        }
-    }
-    var nav = navigator.geolocation;
-    var pos = nav.getCurrentPosition(fn_ok);
 
-    function fn_ok(position)
-    {
-        var lat = position.coords.latitude;
-        var lng = position.coords.longitude;
-        yourLocation = new google.maps.LatLng(lat, lng);
-    }
+    yourLocation = "ĐH Kinh Tế , TP HCM";
 
     directionsService = new google.maps.DirectionsService();    // Khởi tạo DirectionsService - thằng này có nhiệm vụ tính toán chỉ đường cho chúng ta.
     directionsDisplay = new google.maps.DirectionsRenderer({map: map});    // Khởi tạo DirectionsRenderer - thằng này có nhiệm vụ hiển thị chỉ đường trên bản đồ sau khi đã tính toán.
@@ -201,7 +255,7 @@ function initMap()
         //clearMarkers();
         if (checkStatus === true)
         {
-            userLocation = document.getElementById('destination').value;
+            userLocation = "DH Khoa hoc tu nhien, TP HCM"; // hello
             calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
         }
         else
@@ -212,9 +266,8 @@ function initMap()
     };    
 
     //document.getElementById('source').addEventListener('change', onChangeHandler);    // Tạo sự kiện khi chọn điểm xuất phát
-    document.getElementById('destination').addEventListener('change', onChangeHandler);    // Tạo sự kiện khi chọn điểm đích
-    document.getElementById('mode').addEventListener('change', onChangeHandler);    
     document.getElementById('signin-button').addEventListener('click', onChangeHandler);    
+    document.getElementById('status').addEventListener('click', onChangeHandler);    
 } 
 
 function calculateAndDisplayRoute(directionsService, directionsDisplay) 
@@ -250,7 +303,7 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay)
     {    
         origin: start,    
         destination: stop,    
-        travelMode: document.getElementById('mode').value
+        travelMode: "DRIVING"
     }, function(response, status) 
     {    
         if (status === google.maps.DirectionsStatus.OK) 

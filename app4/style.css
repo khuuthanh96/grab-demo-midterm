@@ -62,78 +62,127 @@ body :-ms-input-placeholder
 }    
 #panel 
 {    
-    position: fixed;    
-    top: 0px;    
-    left: 25%;    
-    z-index: 1;    
-    background-color: #fff;    
-    padding: 0px;    
-    border: 1px solid #999;    
-    text-align: center;    
-    font-family: 'Roboto','sans-serif';    
-    line-height: 0px;    
-    padding-left: 10px;    
-    color: #16a085;
+  position: fixed;    
+  top: 0px;    
+  left: 25%;    
+  z-index: 1;    
+  background-color: #fff;    
+  padding: 0px;    
+  border: 1px solid #999;    
+  text-align: center;    
+  font-family: 'Roboto','sans-serif';    
+  line-height: 0px;    
+  padding-left: 10px;    
+  color: #16a085;
 }
 #status
 {
-    position: fixed;
-    z-index: 2;
-    height: 50px;
-    width: 150px;
-    right: 70px;
-    top: 50px;
-    text-align: center;
-    line-height: 46px;
-    font-size: 25px;
-    font-family: 'Lato';
-    font-weight: bolder;
-    color: #16a085;
-    background-color: rgba(255, 255, 255, 0.6);
-    border: 5px solid rgba(255, 255, 255, 0.8);
-    border-radius: 3px;
-    -webkit-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.25);
-    -moz-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.25);
-    box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.25);
-    cursor: pointer;
+  position: fixed;
+  z-index: 2;
+  height: 50px;
+  width: 150px;
+  right: 70px;
+  top: 50px;
+  text-align: center;
+  line-height: 46px;
+  font-size: 25px;
+  font-family: 'Lato';
+  font-weight: bolder;
+  color: #16a085;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 5px solid rgba(255, 255, 255, 0.8);
+  border-radius: 3px;
+  -webkit-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.25);
+  -moz-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.25);
+  box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.25);
+  cursor: pointer;
 }
 #status:hover
 {
-    -webkit-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.15);
-    -moz-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.15);
-    box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.15);
+  -webkit-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.15);
+  -moz-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.15);
+  box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.15);
 }
 .statusClicked
 {
-    color: #fff !important;
-    background-color: rgba(37, 196, 129, 1) !important;
-    border: 5px solid rgba(255, 255, 255, 0.8) !important;
+  color: #fff !important;
+  background-color: rgba(37, 196, 129, 1) !important;
+  border: 5px solid rgba(255, 255, 255, 0.8) !important;
+}
+#accept {
+  z-index: 3;
+  position: fixed;
+  height: 30vh;
+  width: 70vw;
+  text-align: center;
+  padding-top: 5vh;
+  font-size: 8vh;
+  font-family: 'Arial';
+  font-weight: bolder;
+  color: #53e3a6;
+  background-color: #fff;
+  border-radius: 3px;
+  -webkit-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.25);
+  -moz-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.25);
+  box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.25);
+  left: 0;
+  right: 0;
+  margin: calc(50vh - 15vh) auto;
+}
+.yes_accept
+{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: 30%;
+  width: 50%;
+  color: #16a085;
+  cursor: pointer;
+
+}
+.no_accept
+{
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 30%;
+  width: 50%;
+  color: red;
+  cursor: pointer;
+
+}
+.yes_accept:hover,
+.no_accept:hover
+{
+  -webkit-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.25);
+  -moz-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.25);
+  box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.25);
 }
 #yourLocation
 {
-    position: fixed;
-    z-index: 6;
-    height: 100px;
-    width: 500px;
-    top: calc(50vh - 50px);
-    left: calc(50vw - 250px);
-    background-color: #fff;
-    text-align: center;
-    line-height: 95px;
-    font-size: 30px;
-    font-family: 'Lato';
-    font-weight: bolder;
-    color: #16a085;
-    cursor: pointer;
-    -webkit-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.35);
-    -moz-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.35);
-    box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.35);
+  position: fixed;
+  z-index: 6;
+  height: 100px;
+  width: 500px;
+  top: calc(50vh - 50px);
+  left: calc(50vw - 250px);
+  background-color: #fff;
+  text-align: center;
+  line-height: 95px;
+  font-size: 30px;
+  font-family: 'Lato';
+  font-weight: bolder;
+  color: #16a085;
+  cursor: pointer;
+  -webkit-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.35);
+  -moz-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.35);
+  box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.35);
 }
 #yourLocation:hover
 {
-    -webkit-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.15);
-    -moz-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.15);
-    box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.15);
+  -webkit-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.15);
+  -moz-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.15);
+  box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.15);
 }
 .none
 {
@@ -141,38 +190,38 @@ body :-ms-input-placeholder
 }
 .wrapper
 {
-    position: fixed;
-    z-index: 10;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 100vw;
-    background: #50a3a2;
-    background: linear-gradient(to bottom right, #50a3a2 0%, #53e3a6 100%);
-    overflow: hidden;
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: #50a3a2;
+  background: linear-gradient(to bottom right, #50a3a2 0%, #53e3a6 100%);
+  overflow: hidden;
 }
 .bg-bubbles
 {
-    z-index: 10;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+  z-index: 10;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 .bg-bubbles li 
 {
-    z-index: 10;
-    position: absolute;
-    list-style: none;
-    display: block;
-    width: 40px;
-    height: 40px;
-    background-color: rgba(255, 255, 255, 0.15);
-    bottom: -160px;
-    -webkit-animation: square 25s infinite;
-    animation: square 25s infinite;
-    transition-timing-function: linear;
+  z-index: 10;
+  position: absolute;
+  list-style: none;
+  display: block;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.15);
+  bottom: -160px;
+  -webkit-animation: square 25s infinite;
+  animation: square 25s infinite;
+  transition-timing-function: linear;
 }
 .bg-bubbles li:nth-child(1) 
 {
@@ -277,5 +326,28 @@ body :-ms-input-placeholder
   {
       -webkit-transform: translateY(-700px) rotate(600deg);
               transform: translateY(-700px) rotate(600deg);
+  }
+}
+@media (max-width: 685px)
+{
+  #accept
+  {
+    padding-top: 5vh;
+    font-size: 9vw;
+  }
+  .fa-check,
+  .fa-times
+  {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 10% auto 0 auto;
+  }
+  #status
+  {
+    right: 0;
+    left: 0;
+    margin: 3vh auto 0 auto;
+    
   }
 }

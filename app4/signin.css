@@ -358,7 +358,7 @@ form button:hover
         margin: 80px auto 0 auto;
     }
 }
-@media (max-width: 685px)
+@media (max-width: 800px)
 {
     .avatar
     {
