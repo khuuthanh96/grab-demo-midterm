@@ -377,7 +377,7 @@ form button:hover
     /* background-color: #292929; */
     color: red;
     text-align: center;
-    text-shadow: 4px 3px 0px #7A7A7A;
+    background-color: #fff;
 }
 @media (max-height: 510px)
 {

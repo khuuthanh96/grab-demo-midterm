@@ -3,6 +3,7 @@ var driver_lat;
 var driver_long;
 var click_lat;
 var click_long;
+var myVar = setInterval(requestAcceptOrder, 60000);
 $(document).ready(function()
 {
     setCookie("accesstoken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmU1NWViYWU4MGRhYzE0MmViZWNkN2IiLCJlbWFpbCI6InRhaXhlMkBnbWFpbC5jb20iLCJuYW1lIjoidGFpeGUgMiIsImFkZHJlc3MiOiI1NDMgc2ZhcywgUDMsIFEuMTAiLCJwaG9uZSI6IjAxMjM0NTYiLCJfX3YiOjAsImxvbmciOjEwNi42ODQwOTI4LCJsYXQiOjEwLjc1OTM0NzksInN0YXR1cyI6dHJ1ZSwiYWN0aXZlIjp0cnVlLCJyb2xlcyI6ImRyaXZlciIsInNleCI6Im1hbGUiLCJpYXQiOjE1NDM0MTk5NzYsImV4cCI6MTU0MzQyMzU3Nn0.I7pXanNRhEHm9ul44w6CHGdlvKkyWVNL5-bJJHk05PE",1);
@@ -180,10 +181,11 @@ $(document).ready(function()
     });
     $(".yes_accept").click(function(event)
     {
-        
+        $("#accept").text("VUI LÒNG ĐỢI ...");
+        $(".accept").addClass("none");
         $.ajax({
-            type: "GET",
-            url: "http://localhost:8000/api/user/driver/ready/" + JSON.parse(getCookie("user"))._id,
+            type: "PUT",
+            url: "http://localhost:8000/api/user/driver/accept/" + JSON.parse(getCookie("user"))._id,
             data: {},
             dataType: "json",
             contentType: "application/json",
@@ -191,8 +193,7 @@ $(document).ready(function()
                 xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
             },
             success: function(data, status) {
-                alert("Hello");
-                console.log(data.data);
+                setCookie("success", JSON.stringify(data.success), 7);
                 $(".accept").addClass("none");
             },
             error: function(jqXhr) {
@@ -218,11 +219,32 @@ $(document).ready(function()
             },
             error: function(jqXhr) {
                 console.log(JSON.stringify(jqXhr));
-                alert("Don't Accept! Sorry!");
+                alert("Don't Cancel! Sorry!");
             }
         })
     });
 });
+function requestAcceptOrder()
+{
+    $.ajax({
+        type: "GET",
+        url: "http://localhost:8000/api/user/driver/ready/" + JSON.parse(getCookie("user"))._id,
+        data: {},
+        dataType: "json",
+        contentType: "application/json",
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+        },
+        success: function(data, status) {
+            console.log(data.data);
+            $(".accept").removeClass("none");
+        },
+        error: function(jqXhr) {
+            console.log(JSON.stringify(jqXhr));
+            alert("Don't Accept! Sorry!");
+        }
+    })
+}
 var map; // Khởi tạo các biến global mã mình sẽ sử dụng.
 var directionsDisplay;
 var directionsService;
@@ -330,11 +352,11 @@ function placeMarkerAndPanTo(latLng, map) {
 
     if (d > 100)
     {
-        $(".notice").text("Distance greater than 100m");
+        $(".notice").removeClass("none");
     }
     else
     {
-        $(".notice").text("");
+        $(".notice").addClass("none");
     }
 }
 function calculateAndDisplayRoute(directionsService, directionsDisplay) 

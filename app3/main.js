@@ -1,5 +1,4 @@
 var myVar = setInterval(requestFileJSON, 3000);
-var myVar;
 var dataRequest = {};
 var dataDriver = {};
 var runRequestFileJSON = "false";
