@@ -307,12 +307,25 @@ form button:hover
 {
     background-color: #f5f7f9;
 }
-.avatar
+.info
 {
     z-index: 5;
     position: fixed;
     top: 9px;
-    right: 90px;
+    right: 71px;
+    height: 32px;
+    width: 330px;
+    padding-top: 6px;
+    font-size: 10px;
+    color: #53e3a6;
+    background: #292929;
+}
+.avatar
+{
+    z-index: 5;
+    position: absolute;
+    top: 0;
+    right: 0;
     height: 32px;
     width: 32px;
     padding-top: 6px;
@@ -323,7 +336,7 @@ form button:hover
 .signup_avatar
 {
     position: absolute;
-    top: 0;
+    top: 5px;
     right: 32px;
     height: 32px;
     width: 85px;
@@ -337,6 +350,35 @@ form button:hover
 {
     color: #53e3a6;
 }
+.username
+{
+    position: absolute;
+    top: 3px;
+    right: 122px;
+    height: 32px;
+    width: 200px;
+    font-size: 22px;
+    text-align: center;
+    color: #fff;
+    cursor: pointer;
+    background-color: #16a085;
+    /* background-color: #16a085; */
+}
+.notice
+{
+    z-index: 5;
+    position: fixed;
+    height: 20px;
+    width: 200px;
+    font-weight: bolder;
+    left: 0;
+    right: 0;
+    margin: 50px auto;
+    /* background-color: #292929; */
+    color: red;
+    text-align: center;
+    text-shadow: 4px 3px 0px #7A7A7A;
+}
 @media (max-height: 510px)
 {
     .btn-signin
@@ -344,16 +386,12 @@ form button:hover
         margin: 80px auto 0 auto;
     }
 }
-@media (max-width: 685px)
+@media (max-width: 800px)
 {
-    .avatar
+    .info
     {
-        top: calc(100vh - 42px);
-        left: 20px;
-    }
-    .signup_avatar
-    {
-        top: 0;
-        left: 32px;
+        left: 0;
+        right: 0;
+        margin: calc(100vh - 55px) auto;
     }
 }

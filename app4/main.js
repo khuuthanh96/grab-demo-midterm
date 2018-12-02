@@ -1,8 +1,13 @@
-var checkStatus = false;
+var checkStatus = true;
+var driver_lat;
+var driver_long;
+var click_lat;
+var click_long;
 $(document).ready(function()
 {
     setCookie("accesstoken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmU1NWViYWU4MGRhYzE0MmViZWNkN2IiLCJlbWFpbCI6InRhaXhlMkBnbWFpbC5jb20iLCJuYW1lIjoidGFpeGUgMiIsImFkZHJlc3MiOiI1NDMgc2ZhcywgUDMsIFEuMTAiLCJwaG9uZSI6IjAxMjM0NTYiLCJfX3YiOjAsImxvbmciOjEwNi42ODQwOTI4LCJsYXQiOjEwLjc1OTM0NzksInN0YXR1cyI6dHJ1ZSwiYWN0aXZlIjp0cnVlLCJyb2xlcyI6ImRyaXZlciIsInNleCI6Im1hbGUiLCJpYXQiOjE1NDM0MTk5NzYsImV4cCI6MTU0MzQyMzU3Nn0.I7pXanNRhEHm9ul44w6CHGdlvKkyWVNL5-bJJHk05PE",1);
     setCookie("refreshtoken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjViZTU1ZWJhZTgwZGFjMTQyZWJlY2Q3YiIsImVtYWlsIjoidGFpeGUyQGdtYWlsLmNvbSIsIm5hbWUiOiJ0YWl4ZSAyIiwiYWRkcmVzcyI6IjU0MyBzZmFzLCBQMywgUS4xMCIsInBob25lIjoiMDEyMzQ1NiIsIl9fdiI6MCwibG9uZyI6MTA2LjY4NDA5MjgsImxhdCI6MTAuNzU5MzQ3OSwic3RhdHVzIjp0cnVlLCJhY3RpdmUiOnRydWUsInJvbGVzIjoiZHJpdmVyIiwic2V4IjoibWFsZSJ9LCJydCI6dHJ1ZSwiaWF0IjoxNTQzNDE5OTc2LCJleHAiOjE1NDQwMjQ3NzZ9.b_MAWXpSEPPBMYPOGm_qVJ_EdaaAT9-dFpI4kg_PMJA",7);
+    /*
     $(window).bind('beforeunload', function() {
         $.ajax({
             type: "PUT",
@@ -22,6 +27,7 @@ $(document).ready(function()
             }
         })
     })
+    */
     $(".btn-signin").click(function(event){
         event.stopPropagation();
         $(".btn-signin").removeClass("active");
@@ -31,12 +37,27 @@ $(document).ready(function()
     });
     $(".signup_avatar").click(function(event){
         event.stopPropagation();
-        $(".container_signin").removeClass("none");
-        $(".screenWelcome").removeClass("none");
+        $.ajax({
+            type: "PUT",
+            url: "http://localhost:8000/api/user/logout",
+            data: {},
+            dataType: "json",
+            contentType: "application/json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+            },
+            success: function(data, status) {
+                $(".container_signin").removeClass("none");
+                $(".screenWelcome").removeClass("none");
+                setCookie("success", JSON.stringify(data.success), 7);
+                setCookie("message", data.message, 7);
+            },
+            error: function(jqXhr) {
+                console.log(JSON.stringify(jqXhr));
+                alert("Don't Sign Up! Sorry!");
+            }
+        })
     });   
-    if(typeof getCookie("accesstoken") != "string") {
- 
-    }
     $("#signin-button").click(function(event)
     {
         event.preventDefault();
@@ -60,10 +81,7 @@ $(document).ready(function()
                 setCookie("refreshtoken", data.refreshToken, 7);
                 setCookie("user", JSON.stringify(data.user), 7);
 
-                //set default data
-                $("#clientName").val(data.user.name),
-                $("#address").val(data.user.address),
-                $("#phone").val(data.user.phone)
+                $(".username").text($("#name").val());
             },
             error: function(jqXhr) {
                 $(".btn-signin").addClass("active");
@@ -75,7 +93,31 @@ $(document).ready(function()
                     $("#msg").text("");
                 }, 3000)
             }
+        });
+        /*
+        $.ajax({
+            type: "PUT",
+            url: "http://localhost:8000/api/user/location",
+            data: {},
+            dataType: "json",
+            contentType: "application/json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+            },
+            success: function(data, status) {
+                setCookie("success", JSON.stringify(data.success), 7);
+                setCookie("message", data.message, 7);
+                user_lat = data.lat;
+                user_long = data.long;
+                alert(user_lat);
+                alert(user_long);
+            },
+            error: function(jqXhr) {
+                console.log(JSON.stringify(jqXhr));
+                alert("Error! Don't Get User Location");
+            }
         })
+        */
     });
     //console.log(getCookie("accesstoken"));
     $("#status").click(function(event)
@@ -83,6 +125,7 @@ $(document).ready(function()
         if(checkStatus === false)
         {
             $("#status").addClass("statusClicked");
+            $("#status").text("READY");
             checkStatus = true;
             var data = {
                 "status": true
@@ -131,12 +174,53 @@ $(document).ready(function()
         else
         {
             $("#status").removeClass("statusClicked");
+            $("#status").text("STAND BY");
             checkStatus = false;
         }
     });
-    $("#yourLocation").click(function(event)
+    $(".yes_accept").click(function(event)
     {
-        $("#yourLocation").addClass("none");
+        
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8000/api/user/driver/ready/" + JSON.parse(getCookie("user"))._id,
+            data: {},
+            dataType: "json",
+            contentType: "application/json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+            },
+            success: function(data, status) {
+                alert("Hello");
+                console.log(data.data);
+                $(".accept").addClass("none");
+            },
+            error: function(jqXhr) {
+                console.log(JSON.stringify(jqXhr));
+                alert("Don't Accept! Sorry!");
+            }
+        })
+    });
+    $(".no_accept").click(function(event) // hello
+    {
+        $.ajax({
+            type: "PUT",
+            url: "http://localhost:8000/api/user/driver/cancel/" + JSON.parse(getCookie("user"))._id,
+            data: {},
+            dataType: "json",
+            contentType: "application/json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+            },
+            success: function(data, status) {
+                setCookie("success", JSON.stringify(data.success), 7);
+                $(".accept").addClass("none");
+            },
+            error: function(jqXhr) {
+                console.log(JSON.stringify(jqXhr));
+                alert("Don't Accept! Sorry!");
+            }
+        })
     });
 });
 var map; // Khởi tạo các biến global mã mình sẽ sử dụng.
@@ -145,6 +229,7 @@ var directionsService;
 var yourLocation;
 var userLocation;
 var markers = [];
+var hello;
 function initMap() 
 {  
     var lat_lng = {lat: 10.763292, lng: 106.682172};
@@ -153,27 +238,13 @@ function initMap()
         zoom: 16,    // tỉ lệ phóng bản đồ
         center: lat_lng   
     });
-    var checkOnLocation = false;
-    while (checkOnLocation === false)
+    $("#map").click(function(event) // hello
     {
-        if (navigator.geolocation)
-        {
-            checkOnLocation = true;
-        }
-        else
-        {
-            alert("Please turn on your location!");
-        }
-    }
-    var nav = navigator.geolocation;
-    var pos = nav.getCurrentPosition(fn_ok);
-
-    function fn_ok(position)
-    {
-        var lat = position.coords.latitude;
-        var lng = position.coords.longitude;
-        yourLocation = new google.maps.LatLng(lat, lng);
-    }
+        map.addListener('click', function(e) {
+            placeMarkerAndPanTo(e.latLng, map);
+        });
+    });
+    yourLocation = "ĐH Kinh Tế , TP HCM";
 
     directionsService = new google.maps.DirectionsService();    // Khởi tạo DirectionsService - thằng này có nhiệm vụ tính toán chỉ đường cho chúng ta.
     directionsDisplay = new google.maps.DirectionsRenderer({map: map});    // Khởi tạo DirectionsRenderer - thằng này có nhiệm vụ hiển thị chỉ đường trên bản đồ sau khi đã tính toán.
@@ -191,7 +262,7 @@ function initMap()
         //clearMarkers();
         if (checkStatus === true)
         {
-            userLocation = document.getElementById('destination').value;
+            userLocation = "DH Khoa hoc tu nhien, TP HCM"; // hello
             calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
         }
         else
@@ -202,11 +273,70 @@ function initMap()
     };    
 
     //document.getElementById('source').addEventListener('change', onChangeHandler);    // Tạo sự kiện khi chọn điểm xuất phát
-    document.getElementById('destination').addEventListener('change', onChangeHandler);    // Tạo sự kiện khi chọn điểm đích
-    document.getElementById('mode').addEventListener('change', onChangeHandler);    
-    document.getElementById('yourLocation').addEventListener('click', onChangeHandler);    
+    document.getElementById('signin-button').addEventListener('click', onChangeHandler);    
+    document.getElementById('status').addEventListener('click', onChangeHandler);    
 } 
+function placeMarkerAndPanTo(latLng, map) {
+    
+    var marker = new google.maps.Marker({
+        position: latLng,
+        map: map
+    });
+    marker.setVisible(false);
+    //map.panTo(latLng);
+    click_lat = latLng.lat();
+    click_long = latLng.lng();
 
+    var geocoder = new google.maps.Geocoder();
+    var address = yourLocation;
+    geocoder.geocode( { 'address': address}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK)
+        {
+            // do something with the geocoded result
+            //
+            // results[0].geometry.location.latitude
+            // results[0].geometry.location.longitude
+            driver_lat = results[0].geometry.location.lat();
+            driver_long = results[0].geometry.location.lng();
+        }
+    });
+    console.log(click_lat);
+    console.log(click_long);
+    console.log(driver_lat);
+    console.log(driver_long);
+    function toRad(x) {
+        return x * Math.PI / 180;
+    }
+
+    var lon1 = click_long;
+    var lat1 = click_lat;
+
+    var lon2 = driver_long;
+    var lat2 = driver_lat;
+
+    var R = 6371; // km
+
+    var x1 = lat2 - lat1;
+    var dLat = toRad(x1);
+    var x2 = lon2 - lon1;
+    var dLon = toRad(x2)
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c;
+
+    d *= 1000;
+
+    if (d > 100)
+    {
+        $(".notice").text("Distance greater than 100m");
+    }
+    else
+    {
+        $(".notice").text("");
+    }
+}
 function calculateAndDisplayRoute(directionsService, directionsDisplay) 
 {    
 
@@ -240,7 +370,7 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay)
     {    
         origin: start,    
         destination: stop,    
-        travelMode: document.getElementById('mode').value
+        travelMode: "DRIVING"
     }, function(response, status) 
     {    
         if (status === google.maps.DirectionsStatus.OK) 
