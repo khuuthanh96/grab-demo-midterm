@@ -1,9 +1,11 @@
-var checkStatus = true;
+var checkStatus = true; // hello
 var driver_lat;
 var driver_long;
 var click_lat;
 var click_long;
-var myVar = setInterval(requestAcceptOrder, 60000);
+var myVar = setInterval(requestAcceptOrder, 6000); // hello
+var runRequestAcceptOrder = false;
+var addressInRequest; // hello // cover for userLocation
 $(document).ready(function()
 {
     setCookie("accesstoken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmU1NWViYWU4MGRhYzE0MmViZWNkN2IiLCJlbWFpbCI6InRhaXhlMkBnbWFpbC5jb20iLCJuYW1lIjoidGFpeGUgMiIsImFkZHJlc3MiOiI1NDMgc2ZhcywgUDMsIFEuMTAiLCJwaG9uZSI6IjAxMjM0NTYiLCJfX3YiOjAsImxvbmciOjEwNi42ODQwOTI4LCJsYXQiOjEwLjc1OTM0NzksInN0YXR1cyI6dHJ1ZSwiYWN0aXZlIjp0cnVlLCJyb2xlcyI6ImRyaXZlciIsInNleCI6Im1hbGUiLCJpYXQiOjE1NDM0MTk5NzYsImV4cCI6MTU0MzQyMzU3Nn0.I7pXanNRhEHm9ul44w6CHGdlvKkyWVNL5-bJJHk05PE",1);
@@ -50,6 +52,7 @@ $(document).ready(function()
             success: function(data, status) {
                 $(".container_signin").removeClass("none");
                 $(".screenWelcome").removeClass("none");
+                runRequestAcceptOrder = false;
                 setCookie("success", JSON.stringify(data.success), 7);
                 setCookie("message", data.message, 7);
             },
@@ -61,7 +64,6 @@ $(document).ready(function()
     });   
     $("#signin-button").click(function(event)
     {
-        event.preventDefault();
         var data = {
             "email": $("#name").val(),
             "password": $("#password").val()
@@ -78,6 +80,7 @@ $(document).ready(function()
                 $(".container_signin").addClass("none");
                 $(".screenWelcome").addClass("none");
                 $(".wrapper").addClass("none");
+                runRequestAcceptOrder = true;
                 setCookie("accesstoken", data.accessToken, 1);
                 setCookie("refreshtoken", data.refreshToken, 7);
                 setCookie("user", JSON.stringify(data.user), 7);
@@ -181,7 +184,6 @@ $(document).ready(function()
     });
     $(".yes_accept").click(function(event)
     {
-        $("#accept").text("VUI LÒNG ĐỢI ...");
         $(".accept").addClass("none");
         $.ajax({
             type: "PUT",
@@ -226,24 +228,46 @@ $(document).ready(function()
 });
 function requestAcceptOrder()
 {
-    $.ajax({
-        type: "GET",
-        url: "http://localhost:8000/api/user/driver/ready/" + JSON.parse(getCookie("user"))._id,
-        data: {},
-        dataType: "json",
-        contentType: "application/json",
-        beforeSend: function(xhr) {
-            xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
-        },
-        success: function(data, status) {
-            console.log(data.data);
-            $(".accept").removeClass("none");
-        },
-        error: function(jqXhr) {
-            console.log(JSON.stringify(jqXhr));
-            alert("Don't Accept! Sorry!");
-        }
-    })
+    if (runRequestAcceptOrder === true && checkStatus === true)
+    {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8000/api/user/driver/ready/" + JSON.parse(getCookie("user"))._id,
+            data: {},
+            dataType: "json",
+            contentType: "application/json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+            },
+            success: function(data, status) {
+                //console.log(data.data);
+                $(".accept").removeClass("none");
+                for (i in data)
+                {
+                    if(i === "data")
+                    {
+                        temp = data[i];
+                        for (j in temp)
+                        {
+                            temptemp = temp[j]
+                            for (k in temptemp)
+                            {
+                                if(k === "address")
+                                {
+                                    addressInRequest =  temptemp[k];
+                                    console.log(addressInRequest);
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            error: function(jqXhr) {
+                console.log(JSON.stringify(jqXhr));
+                alert("Don't Get Data!");
+            }
+        })
+    }
 }
 var map; // Khởi tạo các biến global mã mình sẽ sử dụng.
 var directionsDisplay;
@@ -251,7 +275,6 @@ var directionsService;
 var yourLocation;
 var userLocation;
 var markers = [];
-var hello;
 function initMap() 
 {  
     var lat_lng = {lat: 10.763292, lng: 106.682172};
@@ -260,13 +283,39 @@ function initMap()
         zoom: 16,    // tỉ lệ phóng bản đồ
         center: lat_lng   
     });
-    $("#map").click(function(event) // hello
+
+    var checkOnLocation = false;
+    while (checkOnLocation === false)
     {
-        map.addListener('click', function(e) {
-            placeMarkerAndPanTo(e.latLng, map);
-        });
+        if (navigator.geolocation)
+        {
+            checkOnLocation = true;
+        }
+        else
+        {
+            alert("Please turn on your location!");
+        }
+    }
+    var nav = navigator.geolocation;
+    var pos = nav.getCurrentPosition(fn_ok);
+
+    function fn_ok(position)
+    {
+        var lat = position.coords.latitude;
+        var lng = position.coords.longitude;
+        driver_lat = lat;
+        driver_long = lng;
+        yourLocation = new google.maps.LatLng(lat, lng);
+    }
+
+    map.addListener('click', function(e) {
+        nav = navigator.geolocation;
+        pos = nav.getCurrentPosition(fn_ok);
+        placeMarkerAndPanTo(e.latLng, map);
+        //alert(yourLocation);
     });
-    yourLocation = "ĐH Kinh Tế , TP HCM";
+
+    //yourLocation = "ĐH Kinh Tế , TP HCM";
 
     directionsService = new google.maps.DirectionsService();    // Khởi tạo DirectionsService - thằng này có nhiệm vụ tính toán chỉ đường cho chúng ta.
     directionsDisplay = new google.maps.DirectionsRenderer({map: map});    // Khởi tạo DirectionsRenderer - thằng này có nhiệm vụ hiển thị chỉ đường trên bản đồ sau khi đã tính toán.
@@ -282,9 +331,9 @@ function initMap()
     var onChangeHandler = function() 
     {    
         //clearMarkers();
-        if (checkStatus === true)
+        if (runRequestAcceptOrder === true)
         {
-            userLocation = "DH Khoa hoc tu nhien, TP HCM"; // hello
+            userLocation = addressInRequest; // hello
             calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
         }
         else
@@ -296,7 +345,7 @@ function initMap()
 
     //document.getElementById('source').addEventListener('change', onChangeHandler);    // Tạo sự kiện khi chọn điểm xuất phát
     document.getElementById('signin-button').addEventListener('click', onChangeHandler);    
-    document.getElementById('status').addEventListener('click', onChangeHandler);    
+    //document.getElementById('status').addEventListener('click', onChangeHandler);    
 } 
 function placeMarkerAndPanTo(latLng, map) {
     
@@ -308,7 +357,7 @@ function placeMarkerAndPanTo(latLng, map) {
     //map.panTo(latLng);
     click_lat = latLng.lat();
     click_long = latLng.lng();
-
+    /*
     var geocoder = new google.maps.Geocoder();
     var address = yourLocation;
     geocoder.geocode( { 'address': address}, function(results, status) {
@@ -322,6 +371,7 @@ function placeMarkerAndPanTo(latLng, map) {
             driver_long = results[0].geometry.location.lng();
         }
     });
+    */
     console.log(click_lat);
     console.log(click_long);
     console.log(driver_lat);
