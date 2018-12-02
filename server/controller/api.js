@@ -111,7 +111,7 @@ router.put("/user/driver/accept/:uID", (req, res) => {
 router.get("/user/driver/ready/:uID", (req, res) => {
     const id = req.params.id;
     const myInterval = setInterval(async () => {
-        const myReq = await findLocatedByDriverID(id);
+        const myReq = await request.findLocatedByDriverID(id);
         if(myReq) {
             res.json({
                 success: true,
