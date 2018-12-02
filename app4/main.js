@@ -1,6 +1,8 @@
 var checkStatus = true;
-var user_lat;
-var user_long;
+var driver_lat;
+var driver_long;
+var click_lat;
+var click_long;
 $(document).ready(function()
 {
     setCookie("accesstoken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmU1NWViYWU4MGRhYzE0MmViZWNkN2IiLCJlbWFpbCI6InRhaXhlMkBnbWFpbC5jb20iLCJuYW1lIjoidGFpeGUgMiIsImFkZHJlc3MiOiI1NDMgc2ZhcywgUDMsIFEuMTAiLCJwaG9uZSI6IjAxMjM0NTYiLCJfX3YiOjAsImxvbmciOjEwNi42ODQwOTI4LCJsYXQiOjEwLjc1OTM0NzksInN0YXR1cyI6dHJ1ZSwiYWN0aXZlIjp0cnVlLCJyb2xlcyI6ImRyaXZlciIsInNleCI6Im1hbGUiLCJpYXQiOjE1NDM0MTk5NzYsImV4cCI6MTU0MzQyMzU3Nn0.I7pXanNRhEHm9ul44w6CHGdlvKkyWVNL5-bJJHk05PE",1);
@@ -189,9 +191,9 @@ $(document).ready(function()
                 xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
             },
             success: function(data, status) {
-                $(".accept").addClass("none");
                 alert("Hello");
-                console.log(data);
+                console.log(data.data);
+                $(".accept").addClass("none");
             },
             error: function(jqXhr) {
                 console.log(JSON.stringify(jqXhr));
@@ -211,7 +213,6 @@ $(document).ready(function()
                 xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
             },
             success: function(data, status) {
-                $(".accept").addClass("none");
                 setCookie("success", JSON.stringify(data.success), 7);
                 $(".accept").addClass("none");
             },
@@ -228,6 +229,7 @@ var directionsService;
 var yourLocation;
 var userLocation;
 var markers = [];
+var hello;
 function initMap() 
 {  
     var lat_lng = {lat: 10.763292, lng: 106.682172};
@@ -236,7 +238,12 @@ function initMap()
         zoom: 16,    // tỉ lệ phóng bản đồ
         center: lat_lng   
     });
-
+    $("#map").click(function(event) // hello
+    {
+        map.addListener('click', function(e) {
+            placeMarkerAndPanTo(e.latLng, map);
+        });
+    });
     yourLocation = "ĐH Kinh Tế , TP HCM";
 
     directionsService = new google.maps.DirectionsService();    // Khởi tạo DirectionsService - thằng này có nhiệm vụ tính toán chỉ đường cho chúng ta.
@@ -269,7 +276,67 @@ function initMap()
     document.getElementById('signin-button').addEventListener('click', onChangeHandler);    
     document.getElementById('status').addEventListener('click', onChangeHandler);    
 } 
+function placeMarkerAndPanTo(latLng, map) {
+    
+    var marker = new google.maps.Marker({
+        position: latLng,
+        map: map
+    });
+    marker.setVisible(false);
+    //map.panTo(latLng);
+    click_lat = latLng.lat();
+    click_long = latLng.lng();
 
+    var geocoder = new google.maps.Geocoder();
+    var address = yourLocation;
+    geocoder.geocode( { 'address': address}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK)
+        {
+            // do something with the geocoded result
+            //
+            // results[0].geometry.location.latitude
+            // results[0].geometry.location.longitude
+            driver_lat = results[0].geometry.location.lat();
+            driver_long = results[0].geometry.location.lng();
+        }
+    });
+    console.log(click_lat);
+    console.log(click_long);
+    console.log(driver_lat);
+    console.log(driver_long);
+    function toRad(x) {
+        return x * Math.PI / 180;
+    }
+
+    var lon1 = click_long;
+    var lat1 = click_lat;
+
+    var lon2 = driver_long;
+    var lat2 = driver_lat;
+
+    var R = 6371; // km
+
+    var x1 = lat2 - lat1;
+    var dLat = toRad(x1);
+    var x2 = lon2 - lon1;
+    var dLon = toRad(x2)
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c;
+
+    d *= 1000;
+
+    if (d > 100)
+    {
+        $(".notice").text("Distance greater than 100m");
+    }
+    else
+    {
+        $(".notice").text("");
+    }
+}
 function calculateAndDisplayRoute(directionsService, directionsDisplay) 
 {    
 
