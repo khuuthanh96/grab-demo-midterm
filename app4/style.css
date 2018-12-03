@@ -109,6 +109,28 @@ body :-ms-input-placeholder
   background-color: rgba(37, 196, 129, 1) !important;
   border: 5px solid rgba(255, 255, 255, 0.8) !important;
 }
+#finish
+{
+  position: fixed;
+  z-index: 3;
+  height: 50px;
+  width: 150px;
+  right: 70px;
+  top: 50px;
+  text-align: center;
+  line-height: 46px;
+  font-size: 25px;
+  font-family: 'Lato';
+  font-weight: bolder;
+  color: #16a085;
+  background-color: rgba(37, 196, 129, 1) !important;
+  border: 5px solid rgba(255, 255, 255, 0.8) !important;
+  border-radius: 3px;
+  -webkit-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.25);
+  -moz-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.25);
+  box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.25);
+  cursor: pointer;
+}
 #accept {
   z-index: 3;
   position: fixed;

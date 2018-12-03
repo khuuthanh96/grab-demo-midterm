@@ -186,7 +186,98 @@ $(document).ready(function()
             $("#status").removeClass("statusClicked");
             $("#status").text("STAND BY");
             checkStatus = false;
+            var data = {
+                "status": false
+            }
+            $.ajax({
+                type: "PUT",
+                url: "http://localhost:8000/api/user/status",
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json",
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+                },
+                success: function(data, status) {
+
+                },
+                error: function(jqXhr) {
+                    console.log(JSON.stringify(jqXhr));
+                    if (jqXhr.status === 401)
+                    {
+                        getAccessToken(function(status) {
+                            if (status){
+                                $.ajax({
+                                    type: "PUT",
+                                    url: "http://localhost:8000/api/user/status",
+                                    data: JSON.stringify(data),
+                                    dataType: "json",
+                                    contentType: "application/json",
+                                    beforeSend: function(xhr) {
+                                        xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+                                    },
+                                    success: function(data, status) {
+                    
+                                    },
+                                });
+                            
+                            }
+                            else {
+                                alert("logout nhe")
+                            }
+                        })
+                    }
+                }
+            })
         }
+    });
+    $(".finish").click(function(event)
+    {
+        var data = {
+            "status": false
+        }
+        $.ajax({
+            type: "PUT",
+            url: "http://localhost:8000/api/user/status",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+            },
+            success: function(data, status) {
+                $(".finish").addClass("none");
+                $(".status").trigger("click");
+            },
+            error: function(jqXhr) {
+                console.log(JSON.stringify(jqXhr));
+                if (jqXhr.status === 401)
+                {
+                    getAccessToken(function(status) {
+                        if (status){
+                            $.ajax({
+                                type: "PUT",
+                                url: "http://localhost:8000/api/user/status",
+                                data: JSON.stringify(data),
+                                dataType: "json",
+                                contentType: "application/json",
+                                beforeSend: function(xhr) {
+                                    xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+                                },
+                                success: function(data, status) {
+                                    $(".finish").addClass("none");
+                                    $(".status").trigger("click");
+                                },
+                            });
+                        
+                        }
+                        else {
+                            alert("logout nhe")
+                        }
+                    })
+                }
+            }
+        })
     });
     $(".yes_accept").click(function(event)
     {
@@ -203,6 +294,7 @@ $(document).ready(function()
             success: function(data, status) {
                 setCookie("success", JSON.stringify(data.success), 7);
                 $(".accept").addClass("none");
+                $(".finish").removeClass("none");
             },
             error: function(jqXhr) {
                 console.log(JSON.stringify(jqXhr));

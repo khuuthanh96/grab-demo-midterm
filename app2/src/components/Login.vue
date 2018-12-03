@@ -188,7 +188,6 @@ form button:hover
 .content__container__text 
 {
     display: inline;
-    float: left;
     margin: 0;
 }
 .content__container__list 
