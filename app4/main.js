@@ -6,6 +6,8 @@ var click_long;
 var myVar = setInterval(requestAcceptOrder, 60000); // hello
 var runRequestAcceptOrder = false;
 var addressInRequest; // hello // cover for userLocation
+var btnSignInClicked = "1";
+var btnNoAcceptClicked = false;
 $(document).ready(function()
 {
     setCookie("accesstoken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmU1NWViYWU4MGRhYzE0MmViZWNkN2IiLCJlbWFpbCI6InRhaXhlMkBnbWFpbC5jb20iLCJuYW1lIjoidGFpeGUgMiIsImFkZHJlc3MiOiI1NDMgc2ZhcywgUDMsIFEuMTAiLCJwaG9uZSI6IjAxMjM0NTYiLCJfX3YiOjAsImxvbmciOjEwNi42ODQwOTI4LCJsYXQiOjEwLjc1OTM0NzksInN0YXR1cyI6dHJ1ZSwiYWN0aXZlIjp0cnVlLCJyb2xlcyI6ImRyaXZlciIsInNleCI6Im1hbGUiLCJpYXQiOjE1NDM0MTk5NzYsImV4cCI6MTU0MzQyMzU3Nn0.I7pXanNRhEHm9ul44w6CHGdlvKkyWVNL5-bJJHk05PE",1);
@@ -52,6 +54,8 @@ $(document).ready(function()
             success: function(data, status) {
                 $(".container_signin").removeClass("none");
                 $(".screenWelcome").removeClass("none");
+                $(".wrapper").removeClass("none");
+                btnSignInClicked = "0";
                 runRequestAcceptOrder = false;
                 setCookie("success", JSON.stringify(data.success), 7);
                 setCookie("message", data.message, 7);
@@ -80,6 +84,7 @@ $(document).ready(function()
                 $(".container_signin").addClass("none");
                 $(".screenWelcome").addClass("none");
                 $(".wrapper").addClass("none");
+                btnSignInClicked = "1";
                 runRequestAcceptOrder = true;
                 setCookie("accesstoken", data.accessToken, 1);
                 setCookie("refreshtoken", data.refreshToken, 7);
@@ -276,7 +281,7 @@ var yourLocation;
 var userLocation;
 var markers = [];
 function initMap() 
-{  
+{   
     var lat_lng = {lat: 10.763292, lng: 106.682172};
     map = new google.maps.Map(document.getElementById('map'), 
     {    // Khởi tạo map với trong id html là map (lát nữa sẽ tạo <div id="map">)
@@ -331,7 +336,7 @@ function initMap()
     var onChangeHandler = function() 
     {    
         //clearMarkers();
-        if (runRequestAcceptOrder === true)
+        if (checkStatus === true) // Replace for runRequestAcceptOrder
         {
             userLocation = addressInRequest; // hello
             calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
@@ -341,10 +346,24 @@ function initMap()
             userLocation = yourLocation;
             calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
         }
+        
     };    
+    var onChangeHandler2 = function() 
+    {    
+        userLocation = yourLocation;
+        calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
+    };    
+    var onChangeHandler3 = function() 
+    {    
+        btnNoAcceptClicked = true;
+        userLocation = yourLocation;
+        calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
+    };  
 
     //document.getElementById('source').addEventListener('change', onChangeHandler);    // Tạo sự kiện khi chọn điểm xuất phát
-    document.getElementById('signin-button').addEventListener('click', onChangeHandler);    
+    document.getElementById('yes_accept').addEventListener('click', onChangeHandler);  
+    document.getElementById('signin-button').addEventListener('click', onChangeHandler2);      
+    document.getElementById('no_accept').addEventListener('click', onChangeHandler3);    
     //document.getElementById('status').addEventListener('click', onChangeHandler);    
 } 
 function placeMarkerAndPanTo(latLng, map) {
@@ -480,7 +499,16 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay)
             makeMarker( leg.start_location, icons.start, "My Location:\n" + start);
             if (checkStatus === true)
             {
-                makeMarker( leg.end_location, icons.end, stop );
+                if (btnSignInClicked !== "1")
+                {
+                    makeMarker( leg.end_location, icons.end, stop );
+                }
+                else
+                {
+                    makeMarker( leg.end_location, icons.start, "My Location:\n" + start );
+                    btnSignInClicked = "2";
+                    alert(btnSignInClicked);
+                }
             }
             else
             {
