@@ -122,7 +122,7 @@ body :-ms-input-placeholder
   font-size: 25px;
   font-family: 'Lato';
   font-weight: bolder;
-  color: #16a085;
+  color: #fff;
   background-color: rgba(37, 196, 129, 1) !important;
   border: 5px solid rgba(255, 255, 255, 0.8) !important;
   border-radius: 3px;
@@ -365,11 +365,11 @@ body :-ms-input-placeholder
     right: 0;
     margin: 10% auto 0 auto;
   }
-  #status
+  #status,
+  #finish
   {
     right: 0;
     left: 0;
     margin: 3vh auto 0 auto;
-    
   }
 }

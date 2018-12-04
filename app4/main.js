@@ -69,6 +69,7 @@ $(document).ready(function()
     });   
     $("#signin-button").click(function(event)
     {
+        event.preventDefault();
         var data = {
             "email": $("#name").val(),
             "password": $("#password").val()
@@ -132,6 +133,7 @@ $(document).ready(function()
     //console.log(getCookie("accesstoken"));
     $("#status").click(function(event)
     {
+        event.stopPropagation();
         if(checkStatus === false)
         {
             $("#status").addClass("statusClicked");
@@ -217,8 +219,11 @@ $(document).ready(function()
                                         xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
                                     },
                                     success: function(data, status) {
-                    
+
                                     },
+                                    error: function(jqXhr) {
+                                        console.log(JSON.stringify(jqXhr));
+                                    }
                                 });
                             
                             }
@@ -233,6 +238,7 @@ $(document).ready(function()
     });
     $(".finish").click(function(event)
     {
+        event.stopPropagation();
         var data = {
             "status": false
         }
@@ -248,6 +254,7 @@ $(document).ready(function()
             success: function(data, status) {
                 $(".finish").addClass("none");
                 $(".status").trigger("click");
+                runRequestAcceptOrder = true;
             },
             error: function(jqXhr) {
                 console.log(JSON.stringify(jqXhr));
@@ -267,9 +274,12 @@ $(document).ready(function()
                                 success: function(data, status) {
                                     $(".finish").addClass("none");
                                     $(".status").trigger("click");
+                                    runRequestAcceptOrder = true;
                                 },
+                                error: function(jqXhr) {
+                                    console.log(JSON.stringify(jqXhr));
+                                }
                             });
-                        
                         }
                         else {
                             alert("logout nhe")
@@ -281,6 +291,7 @@ $(document).ready(function()
     });
     $(".yes_accept").click(function(event)
     {
+        event.stopPropagation();
         $(".accept").addClass("none");
         $.ajax({
             type: "PUT",
@@ -295,6 +306,12 @@ $(document).ready(function()
                 setCookie("success", JSON.stringify(data.success), 7);
                 $(".accept").addClass("none");
                 $(".finish").removeClass("none");
+                //$(".status").removeClass("none");
+                //$("#status").removeClass("statusClicked");
+                //$("#status").text("STAND BY");
+                //checkStatus = false;
+                // Error nha
+                runRequestAcceptOrder = false;
             },
             error: function(jqXhr) {
                 console.log(JSON.stringify(jqXhr));
@@ -304,6 +321,7 @@ $(document).ready(function()
     });
     $(".no_accept").click(function(event) // hello
     {
+        event.stopPropagation();
         $.ajax({
             type: "PUT",
             url: "http://localhost:8000/api/user/driver/cancel/" + JSON.parse(getCookie("user"))._id,
