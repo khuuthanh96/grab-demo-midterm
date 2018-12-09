@@ -9,10 +9,93 @@ var addressInRequest; // hello // cover for userLocation
 //var btnSignInClicked = "1";
 //var btnNoAcceptClicked = false;
 var forIcon = false;
+function initMap() {}
+
 $(document).ready(function()
 {
-    setCookie("accesstoken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmU1NWViYWU4MGRhYzE0MmViZWNkN2IiLCJlbWFpbCI6InRhaXhlMkBnbWFpbC5jb20iLCJuYW1lIjoidGFpeGUgMiIsImFkZHJlc3MiOiI1NDMgc2ZhcywgUDMsIFEuMTAiLCJwaG9uZSI6IjAxMjM0NTYiLCJfX3YiOjAsImxvbmciOjEwNi42ODQwOTI4LCJsYXQiOjEwLjc1OTM0NzksInN0YXR1cyI6dHJ1ZSwiYWN0aXZlIjp0cnVlLCJyb2xlcyI6ImRyaXZlciIsInNleCI6Im1hbGUiLCJpYXQiOjE1NDM0MTk5NzYsImV4cCI6MTU0MzQyMzU3Nn0.I7pXanNRhEHm9ul44w6CHGdlvKkyWVNL5-bJJHk05PE",1);
-    setCookie("refreshtoken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjViZTU1ZWJhZTgwZGFjMTQyZWJlY2Q3YiIsImVtYWlsIjoidGFpeGUyQGdtYWlsLmNvbSIsIm5hbWUiOiJ0YWl4ZSAyIiwiYWRkcmVzcyI6IjU0MyBzZmFzLCBQMywgUS4xMCIsInBob25lIjoiMDEyMzQ1NiIsIl9fdiI6MCwibG9uZyI6MTA2LjY4NDA5MjgsImxhdCI6MTAuNzU5MzQ3OSwic3RhdHVzIjp0cnVlLCJhY3RpdmUiOnRydWUsInJvbGVzIjoiZHJpdmVyIiwic2V4IjoibWFsZSJ9LCJydCI6dHJ1ZSwiaWF0IjoxNTQzNDE5OTc2LCJleHAiOjE1NDQwMjQ3NzZ9.b_MAWXpSEPPBMYPOGm_qVJ_EdaaAT9-dFpI4kg_PMJA",7);
+    initMap = function() {   
+        var lat_lng = {lat: 10.763292, lng: 106.682172};
+        map = new google.maps.Map(document.getElementById('map'), 
+        {    // Khởi tạo map với trong id html là map (lát nữa sẽ tạo <div id="map">)
+            zoom: 16,    // tỉ lệ phóng bản đồ
+            center: lat_lng   
+        });
+    
+        var checkOnLocation = false;
+        while (checkOnLocation === false)
+        {
+            if (navigator.geolocation)
+            {
+                checkOnLocation = true;
+            }
+            else
+            {
+                alert("Please turn on your location!");
+            }
+        }
+        var nav = navigator.geolocation;
+        var pos = nav.getCurrentPosition(fn_ok);
+    
+        function fn_ok(position)
+        {
+            var lat = position.coords.latitude;
+            var lng = position.coords.longitude;
+            driver_lat = lat;
+            driver_long = lng;
+            yourLocation = new google.maps.LatLng(lat, lng);
+        }
+    
+        map.addListener('click', function(e) {
+            nav = navigator.geolocation;
+            pos = nav.getCurrentPosition(fn_ok);
+            placeMarkerAndPanTo(e.latLng, map);
+            //alert(yourLocation);
+        });
+    
+        //yourLocation = "ĐH Kinh Tế , TP HCM";
+    
+        directionsService = new google.maps.DirectionsService();    // Khởi tạo DirectionsService - thằng này có nhiệm vụ tính toán chỉ đường cho chúng ta.
+        directionsDisplay = new google.maps.DirectionsRenderer({map: map});    // Khởi tạo DirectionsRenderer - thằng này có nhiệm vụ hiển thị chỉ đường trên bản đồ sau khi đã tính toán.
+        directionsDisplay.setOptions({
+            polylineOptions: {
+                strokeWeight: 5,
+                strokeOpacity: 1,
+                strokeColor:  "#25c481" 
+            },
+            suppressMarkers: true,
+        });
+        //directionsDisplay.setOptions( { suppressMarkers: true } );
+        var onChangeHandler = function() 
+        {    
+            //clearMarkers();
+            if (checkStatus === true) // Replace for runRequestAcceptOrder
+            {
+                forIcon = true;
+                userLocation = addressInRequest; // hello
+                calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
+            }
+            else
+            {
+                forIcon = true;
+                userLocation = yourLocation;
+                calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
+            }
+            
+        };    
+        var onChangeHandler2 = function() 
+        {    
+            forIcon = false;
+            userLocation = yourLocation;
+            calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
+        };    
+    
+        //document.getElementById('source').addEventListener('change', onChangeHandler);    // Tạo sự kiện khi chọn điểm xuất phát
+        document.getElementById('yes_accept').addEventListener('click', onChangeHandler);  
+        document.getElementById('signin-button').addEventListener('click', onChangeHandler2);      
+        document.getElementById('no_accept').addEventListener('click', onChangeHandler2);    
+        //document.getElementById('status').addEventListener('click', onChangeHandler);    
+    } 
+
     /*
     $(window).bind('beforeunload', function() {
         $.ajax({
@@ -69,7 +152,6 @@ $(document).ready(function()
     });   
     $("#signin-button").click(function(event)
     {
-        event.preventDefault();
         var data = {
             "email": $("#name").val(),
             "password": $("#password").val()
@@ -95,6 +177,8 @@ $(document).ready(function()
                 $(".username").text($("#name").val());
             },
             error: function(jqXhr) {
+                // alert(jqXhr.responseJSON    )
+
                 $(".btn-signin").addClass("active");
                 $(".title_signin").addClass("none");
                 $(".form").addClass("none");
@@ -133,7 +217,6 @@ $(document).ready(function()
     //console.log(getCookie("accesstoken"));
     $("#status").click(function(event)
     {
-        event.stopPropagation();
         if(checkStatus === false)
         {
             $("#status").addClass("statusClicked");
@@ -219,11 +302,8 @@ $(document).ready(function()
                                         xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
                                     },
                                     success: function(data, status) {
-
+                    
                                     },
-                                    error: function(jqXhr) {
-                                        console.log(JSON.stringify(jqXhr));
-                                    }
                                 });
                             
                             }
@@ -238,7 +318,6 @@ $(document).ready(function()
     });
     $(".finish").click(function(event)
     {
-        event.stopPropagation();
         var data = {
             "status": false
         }
@@ -254,7 +333,6 @@ $(document).ready(function()
             success: function(data, status) {
                 $(".finish").addClass("none");
                 $(".status").trigger("click");
-                runRequestAcceptOrder = true;
             },
             error: function(jqXhr) {
                 console.log(JSON.stringify(jqXhr));
@@ -274,12 +352,9 @@ $(document).ready(function()
                                 success: function(data, status) {
                                     $(".finish").addClass("none");
                                     $(".status").trigger("click");
-                                    runRequestAcceptOrder = true;
                                 },
-                                error: function(jqXhr) {
-                                    console.log(JSON.stringify(jqXhr));
-                                }
                             });
+                        
                         }
                         else {
                             alert("logout nhe")
@@ -291,7 +366,6 @@ $(document).ready(function()
     });
     $(".yes_accept").click(function(event)
     {
-        event.stopPropagation();
         $(".accept").addClass("none");
         $.ajax({
             type: "PUT",
@@ -306,12 +380,6 @@ $(document).ready(function()
                 setCookie("success", JSON.stringify(data.success), 7);
                 $(".accept").addClass("none");
                 $(".finish").removeClass("none");
-                //$(".status").removeClass("none");
-                //$("#status").removeClass("statusClicked");
-                //$("#status").text("STAND BY");
-                //checkStatus = false;
-                // Error nha
-                runRequestAcceptOrder = false;
             },
             error: function(jqXhr) {
                 console.log(JSON.stringify(jqXhr));
@@ -321,7 +389,6 @@ $(document).ready(function()
     });
     $(".no_accept").click(function(event) // hello
     {
-        event.stopPropagation();
         $.ajax({
             type: "PUT",
             url: "http://localhost:8000/api/user/driver/cancel/" + JSON.parse(getCookie("user"))._id,
@@ -391,89 +458,7 @@ var directionsService;
 var yourLocation;
 var userLocation;
 var markers = [];
-function initMap() 
-{   
-    var lat_lng = {lat: 10.763292, lng: 106.682172};
-    map = new google.maps.Map(document.getElementById('map'), 
-    {    // Khởi tạo map với trong id html là map (lát nữa sẽ tạo <div id="map">)
-        zoom: 16,    // tỉ lệ phóng bản đồ
-        center: lat_lng   
-    });
 
-    var checkOnLocation = false;
-    while (checkOnLocation === false)
-    {
-        if (navigator.geolocation)
-        {
-            checkOnLocation = true;
-        }
-        else
-        {
-            alert("Please turn on your location!");
-        }
-    }
-    var nav = navigator.geolocation;
-    var pos = nav.getCurrentPosition(fn_ok);
-
-    function fn_ok(position)
-    {
-        var lat = position.coords.latitude;
-        var lng = position.coords.longitude;
-        driver_lat = lat;
-        driver_long = lng;
-        yourLocation = new google.maps.LatLng(lat, lng);
-    }
-
-    map.addListener('click', function(e) {
-        nav = navigator.geolocation;
-        pos = nav.getCurrentPosition(fn_ok);
-        placeMarkerAndPanTo(e.latLng, map);
-        //alert(yourLocation);
-    });
-
-    //yourLocation = "ĐH Kinh Tế , TP HCM";
-
-    directionsService = new google.maps.DirectionsService();    // Khởi tạo DirectionsService - thằng này có nhiệm vụ tính toán chỉ đường cho chúng ta.
-    directionsDisplay = new google.maps.DirectionsRenderer({map: map});    // Khởi tạo DirectionsRenderer - thằng này có nhiệm vụ hiển thị chỉ đường trên bản đồ sau khi đã tính toán.
-    directionsDisplay.setOptions({
-        polylineOptions: {
-            strokeWeight: 5,
-            strokeOpacity: 1,
-            strokeColor:  "#25c481" 
-        },
-        suppressMarkers: true,
-    });
-    //directionsDisplay.setOptions( { suppressMarkers: true } );
-    var onChangeHandler = function() 
-    {    
-        //clearMarkers();
-        if (checkStatus === true) // Replace for runRequestAcceptOrder
-        {
-            forIcon = true;
-            userLocation = addressInRequest; // hello
-            calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
-        }
-        else
-        {
-            forIcon = true;
-            userLocation = yourLocation;
-            calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
-        }
-        
-    };    
-    var onChangeHandler2 = function() 
-    {    
-        forIcon = false;
-        userLocation = yourLocation;
-        calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
-    };    
-
-    //document.getElementById('source').addEventListener('change', onChangeHandler);    // Tạo sự kiện khi chọn điểm xuất phát
-    document.getElementById('yes_accept').addEventListener('click', onChangeHandler);  
-    document.getElementById('signin-button').addEventListener('click', onChangeHandler2);      
-    document.getElementById('no_accept').addEventListener('click', onChangeHandler2);    
-    //document.getElementById('status').addEventListener('click', onChangeHandler);    
-} 
 function placeMarkerAndPanTo(latLng, map) {
     
     var marker = new google.maps.Marker({

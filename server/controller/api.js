@@ -180,7 +180,7 @@ router.put("/user/driver/cancel/:uID", (req, res) => {
             const qualifyDriver = findNearestDriver(driverList, { lat: myreq.locatedLat, lng: myreq.locatedLng });
 
             //nếu không tìm được thì response về người dùng
-            if(!qualifyDriver) return request.findByIdAndUpdate(myreq._id, { $set: {driverName: "", driverID: null,cancelled:myreq.cancelled, resend: myreq.resend+=1 }});
+            if(!qualifyDriver) return request.findByIdAndUpdate(myreq._id, { $set: {driverName: "", driverID: null,cancelled:myreq.cancelled, resend: myreq.resend+=1, status: STATE["TAI_XE_HUY_YEU_CAU"] }});
 
 
             return request.findByIdAndUpdate(myreq._id, { $set: {driverName: qualifyDriver.name, driverID: qualifyDriver.id,cancelled:myreq.cancelled, resend: myreq.resend+=1 }});
@@ -361,7 +361,7 @@ router.put("/request/located/:id", (req, res) => {
 
     request.findByIdAndUpdate(id, { $set: {"locatedLat": lat, "locatedLng": lng, "state": myState}})
     .then(_ => {
-        return user.find({"active": true, "roles": "driver"});
+        return user.find({active: true, roles: "driver", status: true});
     })
     .then(driverList => {
         const qualifyDriver = findNearestDriver(driverList, { lat, lng });
