@@ -5,7 +5,8 @@ const STATE = {
     DANG_DI_CHUYEN: 3,
     DA_HOAN_THANH: 4,
     KHACH_HUY_YEU_CAU: 5,
-    TAI_XE_HUY_YEU_CAU: 6
+    TAI_XE_HUY_YEU_CAU: 6,
+    KHONG_PHAN_HOI: 7
 };
 
 module.exports = { STATE };

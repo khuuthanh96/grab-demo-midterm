@@ -112,6 +112,7 @@ router.get("/user/driver/ready/:uID", (req, res) => {
     const id = req.params.id;
     const myInterval = setInterval(async () => {
         const myReq = await request.findLocatedByDriverID(id);
+        console.log(myReq)
         if(myReq) {
             res.json({
                 success: true,
@@ -125,7 +126,6 @@ router.get("/user/driver/ready/:uID", (req, res) => {
  
     const myTimeout = setTimeout(() => {
         clearInterval(myInterval);
-        request.findByIdAndRemove(id);
         res.json({
             success: false,
             data: {}
@@ -180,7 +180,7 @@ router.put("/user/driver/cancel/:uID", (req, res) => {
             const qualifyDriver = findNearestDriver(driverList, { lat: myreq.locatedLat, lng: myreq.locatedLng });
 
             //nếu không tìm được thì response về người dùng
-            if(!qualifyDriver) return request.findByIdAndUpdate(myreq._id, { $set: {driverName: "", driverID: null,cancelled:myreq.cancelled, resend: myreq.resend+=1 }});
+            if(!qualifyDriver) return request.findByIdAndUpdate(myreq._id, { $set: {driverName: "", driverID: null,cancelled:myreq.cancelled, resend: myreq.resend+=1, status: STATE["TAI_XE_HUY_YEU_CAU"] }});
 
 
             return request.findByIdAndUpdate(myreq._id, { $set: {driverName: qualifyDriver.name, driverID: qualifyDriver.id,cancelled:myreq.cancelled, resend: myreq.resend+=1 }});
@@ -361,11 +361,14 @@ router.put("/request/located/:id", (req, res) => {
 
     request.findByIdAndUpdate(id, { $set: {"locatedLat": lat, "locatedLng": lng, "state": myState}})
     .then(_ => {
-        return user.find({"active": true, "roles": "driver"});
+        return user.find({active: true, roles: "driver", status: true});
     })
     .then(driverList => {
         const qualifyDriver = findNearestDriver(driverList, { lat, lng });
-        return request.findByIdAndUpdate(id, { $set: {"driverName": qualifyDriver.name, "driverID": qualifyDriver.id }})
+        if (qualifyDriver) {
+            return request.findByIdAndUpdate(id, { $set: {"driverName": qualifyDriver.name, "driverID": qualifyDriver.id }})
+        }
+        return request.findByIdAndUpdate(id, { $set: {driverName: "", driverID: null}})
     })
     .then(_ => {
         res.json({success: true})

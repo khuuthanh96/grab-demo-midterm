@@ -4,7 +4,16 @@ var dataDriver = {};
 var runRequestFileJSON = "false";
 setCookie("accesstoken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmU1NWViYWU4MGRhYzE0MmViZWNkN2IiLCJlbWFpbCI6InRhaXhlMkBnbWFpbC5jb20iLCJuYW1lIjoidGFpeGUgMiIsImFkZHJlc3MiOiI1NDMgc2ZhcywgUDMsIFEuMTAiLCJwaG9uZSI6IjAxMjM0NTYiLCJfX3YiOjAsImxvbmciOjEwNi42ODQwOTI4LCJsYXQiOjEwLjc1OTM0NzksInN0YXR1cyI6dHJ1ZSwiYWN0aXZlIjp0cnVlLCJyb2xlcyI6ImRyaXZlciIsInNleCI6Im1hbGUiLCJpYXQiOjE1NDM0MTk5NzYsImV4cCI6MTU0MzQyMzU3Nn0.I7pXanNRhEHm9ul44w6CHGdlvKkyWVNL5-bJJHk05PE",1);
 setCookie("refreshtoken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjViZTU1ZWJhZTgwZGFjMTQyZWJlY2Q3YiIsImVtYWlsIjoidGFpeGUyQGdtYWlsLmNvbSIsIm5hbWUiOiJ0YWl4ZSAyIiwiYWRkcmVzcyI6IjU0MyBzZmFzLCBQMywgUS4xMCIsInBob25lIjoiMDEyMzQ1NiIsIl9fdiI6MCwibG9uZyI6MTA2LjY4NDA5MjgsImxhdCI6MTAuNzU5MzQ3OSwic3RhdHVzIjp0cnVlLCJhY3RpdmUiOnRydWUsInJvbGVzIjoiZHJpdmVyIiwic2V4IjoibWFsZSJ9LCJydCI6dHJ1ZSwiaWF0IjoxNTQzNDE5OTc2LCJleHAiOjE1NDQwMjQ3NzZ9.b_MAWXpSEPPBMYPOGm_qVJ_EdaaAT9-dFpI4kg_PMJA",7);
-
+var STATE = {
+    0: "Chưa Định Vị",
+    1: "Đã Định Vị",
+    2: "Xe Nhận",
+    3: "Đang Di Chuyển",
+    4: "Hoàn Thành",
+    5: "Khách Hủy",
+    6: "Tài Xế Hủy",
+    7: "Không phản hồi"
+}
 $(document).ready(function(){
     /*
     $(window).bind('beforeunload', function() {
@@ -212,10 +221,13 @@ function requestFileJSON()
                         for (j in arrayDataJson)
                         {
                             if (j === "_id" || j === "clientName" || j === "address" 
-                            || j === "driverName" || j === "phone" || j === "state" )
+                            || j === "driverName" || j === "phone")
                             {
                                 item_temp.push('<td id = "' + j + '">' + arrayDataJson[j] + '</td>');
-                            }  
+                            } 
+                            if(j === "state") {
+                                item_temp.push('<td id = "' + j + '">' + STATE[arrayDataJson[j]] + '</td>');
+                            }
                             if (j === "createdAt")
                             {
 
