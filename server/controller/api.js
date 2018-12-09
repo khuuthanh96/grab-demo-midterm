@@ -112,6 +112,7 @@ router.get("/user/driver/ready/:uID", (req, res) => {
     const id = req.params.id;
     const myInterval = setInterval(async () => {
         const myReq = await request.findLocatedByDriverID(id);
+        console.log(myReq)
         if(myReq) {
             res.json({
                 success: true,
@@ -125,7 +126,6 @@ router.get("/user/driver/ready/:uID", (req, res) => {
  
     const myTimeout = setTimeout(() => {
         clearInterval(myInterval);
-        request.findByIdAndRemove(id);
         res.json({
             success: false,
             data: {}

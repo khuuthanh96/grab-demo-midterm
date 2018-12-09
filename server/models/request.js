@@ -33,7 +33,7 @@ class Request extends RequestModel {
     static async findRequestAcceptedByID(id) {
         const req = await Request.findById(id)
         .catch(err => console.log(err))
-        if(typeof req == "undefined") return false;
+        if(typeof req == "undefined"|| req.length === 0) return false;
 
         if(req.state == STATE.XE_NHAN) {
             return req;
@@ -46,9 +46,10 @@ class Request extends RequestModel {
         const state = STATE["DA_DINH_VI"];
         const req = await Request.find({"state": state, "driverID": uID})
         .catch(err => console.log(err))
-        if(typeof req == "undefined") return false;
+        if(typeof req == "undefined" || req.length === 0) return false;
 
         if(req.driverID === uID) {
+            console.log(req.driverID, uID, req)
             return req;
         } else {
             return false;
