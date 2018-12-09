@@ -35,7 +35,7 @@ $(window).bind('beforeunload', function() {
     $.ajax({
         type: "PUT",
         url: "http://localhost:8000/api/request/state/" + myRequest._id,
-        data: JSON.stringify({ "state": "HUY_YEU_CAU" }),
+        data: JSON.stringify({ "state": "KHACH_HUY_YEU_CAU" }),
         dataType: "json",
         contentType: "application/json",
         beforeSend: function(xhr) {
@@ -150,17 +150,20 @@ $("#find-button").click(function(event)
                         } else {
                             $.ajax({
                                 type: "PUT",
-                                url: "http://localhost:8000/api/request/delete/" + myRequest._id,
-                                data: {},
+                                url: "http://localhost:8000/api/request/state/" + myRequest._id,
+                                data: JSON.stringify({ "state": "KHONG_PHAN_HOI" }),
                                 dataType: "json",
                                 contentType: "application/json",
                                 beforeSend: function(xhr) {
                                     xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
                                 },
-                                success: function() {
-                                    console.log("cancel request successful!")
+                                success: function(data) {
+                                    if(data.success) {
+                                        console.log(data.success);
+                                    } else {
+                                        console.log(data.success);
+                                    }
                                 }
-
                             })
                             $("form").fadeIn(500);
                             $(".wrapper").removeClass("form-success");

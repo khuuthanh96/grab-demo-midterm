@@ -11,7 +11,8 @@ var STATE = {
     3: "Đang Di Chuyển",
     4: "Hoàn Thành",
     5: "Khách Hủy",
-    6: "Tài Xế Hủy"
+    6: "Tài Xế Hủy",
+    7: "Không phản hồi"
 }
 $(document).ready(function(){
     /*
