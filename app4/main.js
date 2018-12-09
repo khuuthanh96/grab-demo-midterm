@@ -358,6 +358,7 @@ function requestAcceptOrder()
             success: function(data, status) {
                 //console.log(data.data);
                 $(".accept").removeClass("none");
+                runRequestAcceptOrder = false;
                 for (i in data)
                 {
                     if(i === "data")
@@ -391,6 +392,12 @@ var directionsService;
 var yourLocation;
 var userLocation;
 var markers = [];
+var myVar;
+function myFunction() {
+    setTimeout(function(){
+        myVar = setTimeout(initMap, 3000);
+    }, 3000);
+}
 function initMap() 
 {   
     var lat_lng = {lat: 10.763292, lng: 106.682172};
@@ -424,7 +431,7 @@ function initMap()
         yourLocation = new google.maps.LatLng(lat, lng);
     }
 
-    map.addListener('click', function(e) {
+    map.addListener('click', function(e) {  // touch my map
         nav = navigator.geolocation;
         pos = nav.getCurrentPosition(fn_ok);
         placeMarkerAndPanTo(e.latLng, map);
@@ -472,6 +479,7 @@ function initMap()
     document.getElementById('yes_accept').addEventListener('click', onChangeHandler);  
     document.getElementById('signin-button').addEventListener('click', onChangeHandler2);      
     document.getElementById('no_accept').addEventListener('click', onChangeHandler2);    
+    document.getElementById('finish').addEventListener('click', onChangeHandler2);    
     //document.getElementById('status').addEventListener('click', onChangeHandler);    
 } 
 function placeMarkerAndPanTo(latLng, map) {
@@ -499,10 +507,10 @@ function placeMarkerAndPanTo(latLng, map) {
         }
     });
     */
-    console.log(click_lat);
-    console.log(click_long);
-    console.log(driver_lat);
-    console.log(driver_long);
+    //console.log(click_lat);
+    //console.log(click_long);
+    //console.log(driver_lat);
+    //console.log(driver_long);
     function toRad(x) {
         return x * Math.PI / 180;
     }
@@ -534,6 +542,7 @@ function placeMarkerAndPanTo(latLng, map) {
     else
     {
         $(".notice").addClass("none");
+
         //hello
         var data = {
             "lat": driver_lat,
