@@ -334,6 +334,7 @@ $(document).ready(function()
             success: function(data, status) {
                 setCookie("success", JSON.stringify(data.success), 7);
                 $(".accept").addClass("none");
+                runRequestAcceptOrder = true;
             },
             error: function(jqXhr) {
                 console.log(JSON.stringify(jqXhr));
@@ -432,8 +433,7 @@ function initMap()
     }
 
     map.addListener('click', function(e) {  // touch my map
-        nav = navigator.geolocation;
-        pos = nav.getCurrentPosition(fn_ok);
+        
         placeMarkerAndPanTo(e.latLng, map);
         //alert(yourLocation);
     });
@@ -477,6 +477,7 @@ function initMap()
 
     //document.getElementById('source').addEventListener('change', onChangeHandler);    // Tạo sự kiện khi chọn điểm xuất phát
     document.getElementById('yes_accept').addEventListener('click', onChangeHandler);  
+    //document.getElementById('map').addEventListener('click', onChangeHandler); 
     document.getElementById('signin-button').addEventListener('click', onChangeHandler2);      
     document.getElementById('no_accept').addEventListener('click', onChangeHandler2);    
     document.getElementById('finish').addEventListener('click', onChangeHandler2);    
@@ -542,7 +543,9 @@ function placeMarkerAndPanTo(latLng, map) {
     else
     {
         $(".notice").addClass("none");
-
+        yourLocation = new google.maps.LatLng(click_lat, click_long);
+        driver_lat = click_lat;
+        driver_long = click_long;
         //hello
         var data = {
             "lat": driver_lat,
