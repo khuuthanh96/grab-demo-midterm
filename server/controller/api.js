@@ -365,7 +365,10 @@ router.put("/request/located/:id", (req, res) => {
     })
     .then(driverList => {
         const qualifyDriver = findNearestDriver(driverList, { lat, lng });
-        return request.findByIdAndUpdate(id, { $set: {"driverName": qualifyDriver.name, "driverID": qualifyDriver.id }})
+        if (qualifyDriver) {
+            return request.findByIdAndUpdate(id, { $set: {"driverName": qualifyDriver.name, "driverID": qualifyDriver.id }})
+        }
+        return request.findByIdAndUpdate(id, { $set: {driverName: "", driverID: null}})
     })
     .then(_ => {
         res.json({success: true})
