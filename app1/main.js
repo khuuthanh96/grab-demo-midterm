@@ -50,7 +50,31 @@ $(window).bind('beforeunload', function() {
         }
     })
 })
+$(".signup_avatar").click(function(event){
+    event.stopPropagation();
+    $.ajax({
+        type: "PUT",
+        url: "http://localhost:8000/api/user/logout",
+        data: {},
+        dataType: "json",
+        contentType: "application/json",
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+        },
+        success: function(data, status) {
+            $(".container_signin").removeClass("none");
+            $(".screenWelcome").removeClass("none");
+            setCookie("success", JSON.stringify(data.success), 7);
+            setCookie("message", data.message, 7);
 
+            runRequestFileJSON = "false";
+        },
+        error: function(jqXhr) {
+            console.log(JSON.stringify(jqXhr));
+            alert("Don't Sign Up! Sorry!");
+        }
+    })
+}); 
 $("#signin-button").click(function(event)
 {
     event.preventDefault();
