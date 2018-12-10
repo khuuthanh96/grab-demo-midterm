@@ -9,94 +9,8 @@ var addressInRequest; // hello // cover for userLocation
 //var btnSignInClicked = "1";
 //var btnNoAcceptClicked = false;
 var forIcon = false;
-function initMap() {}
-
 $(document).ready(function()
 {
-    initMap = function() {   
-        var lat_lng = {lat: 10.763292, lng: 106.682172};
-        map = new google.maps.Map(document.getElementById('map'), 
-        {    // Khởi tạo map với trong id html là map (lát nữa sẽ tạo <div id="map">)
-            zoom: 16,    // tỉ lệ phóng bản đồ
-            center: lat_lng   
-        });
-    
-        var checkOnLocation = false;
-        while (checkOnLocation === false)
-        {
-            if (navigator.geolocation)
-            {
-                checkOnLocation = true;
-            }
-            else
-            {
-                alert("Please turn on your location!");
-            }
-        }
-        var nav = navigator.geolocation;
-        var pos = nav.getCurrentPosition(fn_ok);
-    
-        function fn_ok(position)
-        {
-            var lat = position.coords.latitude;
-            var lng = position.coords.longitude;
-            driver_lat = lat;
-            driver_long = lng;
-            yourLocation = new google.maps.LatLng(lat, lng);
-        }
-    
-        map.addListener('click', function(e) {
-            nav = navigator.geolocation;
-            pos = nav.getCurrentPosition(fn_ok);
-            placeMarkerAndPanTo(e.latLng, map);
-            //alert(yourLocation);
-        });
-    
-        //yourLocation = "ĐH Kinh Tế , TP HCM";
-    
-        directionsService = new google.maps.DirectionsService();    // Khởi tạo DirectionsService - thằng này có nhiệm vụ tính toán chỉ đường cho chúng ta.
-        directionsDisplay = new google.maps.DirectionsRenderer({map: map});    // Khởi tạo DirectionsRenderer - thằng này có nhiệm vụ hiển thị chỉ đường trên bản đồ sau khi đã tính toán.
-        directionsDisplay.setOptions({
-            polylineOptions: {
-                strokeWeight: 5,
-                strokeOpacity: 1,
-                strokeColor:  "#25c481" 
-            },
-            suppressMarkers: true,
-        });
-        //directionsDisplay.setOptions( { suppressMarkers: true } );
-        var onChangeHandler = function() 
-        {    
-            //clearMarkers();
-            if (checkStatus === true) // Replace for runRequestAcceptOrder
-            {
-                forIcon = true;
-                userLocation = addressInRequest; // hello
-                calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
-            }
-            else
-            {
-                forIcon = true;
-                userLocation = yourLocation;
-                calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
-            }
-            
-        };    
-        var onChangeHandler2 = function() 
-        {    
-            forIcon = false;
-            userLocation = yourLocation;
-            calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
-        };    
-    
-        //document.getElementById('source').addEventListener('change', onChangeHandler);    // Tạo sự kiện khi chọn điểm xuất phát
-        document.getElementById('yes_accept').addEventListener('click', onChangeHandler);  
-        document.getElementById('signin-button').addEventListener('click', onChangeHandler2);      
-        document.getElementById('no_accept').addEventListener('click', onChangeHandler2); 
-        document.getElementById('finish').addEventListener('click', onChangeHandler2);       
-        //document.getElementById('status').addEventListener('click', onChangeHandler);    
-    } 
-
     /*
     $(window).bind('beforeunload', function() {
         $.ajax({
@@ -414,6 +328,96 @@ $(document).ready(function()
         })
     });
 });
+var myValue;
+function myFunction() {
+    setTimeout(function(){
+        myValue = setTimeout(initMap, 3000);
+    }, 3000);
+}
+function initMap() 
+{  
+    var lat_lng = {lat: 10.763292, lng: 106.682172};
+    map = new google.maps.Map(document.getElementById('map'), 
+    {    // Khởi tạo map với trong id html là map (lát nữa sẽ tạo <div id="map">)
+        zoom: 16,    // tỉ lệ phóng bản đồ
+        center: lat_lng   
+    });
+
+    var checkOnLocation = false;
+    while (checkOnLocation === false)
+    {
+        if (navigator.geolocation)
+        {
+            checkOnLocation = true;
+        }
+        else
+        {
+            alert("Please turn on your location!");
+        }
+    }
+    var nav = navigator.geolocation;
+    var pos = nav.getCurrentPosition(fn_ok);
+
+    function fn_ok(position)
+    {
+        var lat = position.coords.latitude;
+        var lng = position.coords.longitude;
+        driver_lat = lat;
+        driver_long = lng;
+        yourLocation = new google.maps.LatLng(lat, lng);
+    }
+
+    map.addListener('click', function(e) {
+        nav = navigator.geolocation;
+        pos = nav.getCurrentPosition(fn_ok);
+        placeMarkerAndPanTo(e.latLng, map);
+        //alert(yourLocation);
+    });
+
+    //yourLocation = "ĐH Kinh Tế , TP HCM";
+
+    directionsService = new google.maps.DirectionsService();    // Khởi tạo DirectionsService - thằng này có nhiệm vụ tính toán chỉ đường cho chúng ta.
+    directionsDisplay = new google.maps.DirectionsRenderer({map: map});    // Khởi tạo DirectionsRenderer - thằng này có nhiệm vụ hiển thị chỉ đường trên bản đồ sau khi đã tính toán.
+    directionsDisplay.setOptions({
+        polylineOptions: {
+            strokeWeight: 5,
+            strokeOpacity: 1,
+            strokeColor:  "#25c481" 
+        },
+        suppressMarkers: true,
+    });
+    //directionsDisplay.setOptions( { suppressMarkers: true } );
+    var onChangeHandler = function() 
+    {    
+        //clearMarkers();
+        if (checkStatus === true) // Replace for runRequestAcceptOrder
+        {
+            forIcon = true;
+            userLocation = addressInRequest; // hello
+            calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
+        }
+        else
+        {
+            forIcon = true;
+            userLocation = yourLocation;
+            calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
+        }
+        
+    };    
+    var onChangeHandler2 = function() 
+    {    
+        forIcon = false;
+        userLocation = yourLocation;
+        calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
+    };    
+
+    //document.getElementById('source').addEventListener('change', onChangeHandler);    // Tạo sự kiện khi chọn điểm xuất phát
+    document.getElementById('yes_accept').addEventListener('click', onChangeHandler);  
+    document.getElementById('signin-button').addEventListener('click', onChangeHandler2);      
+    document.getElementById('no_accept').addEventListener('click', onChangeHandler2); 
+    document.getElementById('finish').addEventListener('click', onChangeHandler2);       
+    //document.getElementById('status').addEventListener('click', onChangeHandler);    
+} 
 function requestAcceptOrder()
 {
     if (runRequestAcceptOrder === true && checkStatus === true)
