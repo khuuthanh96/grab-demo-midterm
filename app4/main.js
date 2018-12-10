@@ -41,6 +41,11 @@ $(document).ready(function()
     });
     $(".signup_avatar").click(function(event){
         event.stopPropagation();
+        $(".container_signin").removeClass("none");
+        $(".screenWelcome").removeClass("none");
+        $(".wrapper").removeClass("none");
+        forIcon = false;
+        runRequestAcceptOrder = false;
         $.ajax({
             type: "PUT",
             url: "http://localhost:8000/api/user/logout",
@@ -51,11 +56,6 @@ $(document).ready(function()
                 xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
             },
             success: function(data, status) {
-                $(".container_signin").removeClass("none");
-                $(".screenWelcome").removeClass("none");
-                $(".wrapper").removeClass("none");
-                forIcon = false;
-                runRequestAcceptOrder = false;
                 setCookie("success", JSON.stringify(data.success), 7);
                 setCookie("message", data.message, 7);
             },
@@ -64,7 +64,7 @@ $(document).ready(function()
                 alert("Don't Sign Up! Sorry!");
             }
         })
-    });   
+    }); 
     $("#signin-button").click(function(event)
     {
         var data = {
