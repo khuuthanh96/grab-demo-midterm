@@ -218,15 +218,22 @@ function requestFileJSON()
                     {
                         var arrayDataJson = dataRequest[i];
                         item_temp=[]; // Chứa một nhóm td thuộc tr
+                        var checkDriverName = false;
                         for (j in arrayDataJson)
                         {
-                            if (j === "_id" || j === "clientName" || j === "address" 
-                            || j === "driverName" || j === "phone")
+                            if (j === "_id" || j === "clientName" 
+                            || j === "address" || j === "phone")
                             {
                                 item_temp.push('<td id = "' + j + '">' + arrayDataJson[j] + '</td>');
                             } 
-                            if(j === "state") {
+                            if (j === "state") 
+                            {
                                 item_temp.push('<td id = "' + j + '">' + STATE[arrayDataJson[j]] + '</td>');
+                            }
+                            if (j === "driverName")
+                            {
+                                checkDriverName = true;
+                                item_temp.push('<td id = "' + j + '">' + arrayDataJson[j] + '</td>');
                             }
                             if (j === "createdAt")
                             {
@@ -236,6 +243,10 @@ function requestFileJSON()
 
                                 sort_temp.push(n)
                             }
+                        }
+                        if (checkDriverName === false)
+                        {
+                            item_temp.push('<td id = "' + 'driverName' + '">' + '</td>');
                         }
 
                         var sum = '<tr>';
