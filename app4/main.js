@@ -362,13 +362,14 @@ function requestAcceptOrder()
                 xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
             },
             success: function(data, status) {
-                //console.log(data.data);
-                if(JSON.stringify(data.success) === "true")
+                console.log(data.success);
+                if (JSON.stringify(data.success) === "true")
                 {
                     $(".accept").removeClass("none");
                     runRequestAcceptOrder = false;
                     //chổ này muốn truy cập 
                     addressInRequest = JSON.stringify(data.data.address);
+                    userLocation = addressInRequest;
                     console.log(addressInRequest);
                 }
             },
@@ -430,7 +431,7 @@ function initMap()
         //alert(yourLocation);
     });
 
-    //yourLocation = "ĐH Kinh Tế , TP HCM";
+    yourLocation = "ĐH Khoa hoc tu nhien , TP HCM";
 
     directionsService = new google.maps.DirectionsService();    // Khởi tạo DirectionsService - thằng này có nhiệm vụ tính toán chỉ đường cho chúng ta.
     directionsDisplay = new google.maps.DirectionsRenderer({map: map});    // Khởi tạo DirectionsRenderer - thằng này có nhiệm vụ hiển thị chỉ đường trên bản đồ sau khi đã tính toán.
