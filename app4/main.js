@@ -4,13 +4,14 @@ var driver_long;
 var click_lat;
 var click_long;
 var myVar;
-//
 var addressInRequest; // hello // cover for userLocation
 //var btnSignInClicked = "1";
 //var btnNoAcceptClicked = false;
 var forIcon = false;
 $(document).ready(function()
 {
+    setCookie("accesstoken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmU1NWViYWU4MGRhYzE0MmViZWNkN2IiLCJlbWFpbCI6InRhaXhlMkBnbWFpbC5jb20iLCJuYW1lIjoidGFpeGUgMiIsImFkZHJlc3MiOiI1NDMgc2ZhcywgUDMsIFEuMTAiLCJwaG9uZSI6IjAxMjM0NTYiLCJfX3YiOjAsImxvbmciOjEwNi42ODQwOTI4LCJsYXQiOjEwLjc1OTM0NzksInN0YXR1cyI6dHJ1ZSwiYWN0aXZlIjp0cnVlLCJyb2xlcyI6ImRyaXZlciIsInNleCI6Im1hbGUiLCJpYXQiOjE1NDM0MTk5NzYsImV4cCI6MTU0MzQyMzU3Nn0.I7pXanNRhEHm9ul44w6CHGdlvKkyWVNL5-bJJHk05PE",1);
+    setCookie("refreshtoken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjViZTU1ZWJhZTgwZGFjMTQyZWJlY2Q3YiIsImVtYWlsIjoidGFpeGUyQGdtYWlsLmNvbSIsIm5hbWUiOiJ0YWl4ZSAyIiwiYWRkcmVzcyI6IjU0MyBzZmFzLCBQMywgUS4xMCIsInBob25lIjoiMDEyMzQ1NiIsIl9fdiI6MCwibG9uZyI6MTA2LjY4NDA5MjgsImxhdCI6MTAuNzU5MzQ3OSwic3RhdHVzIjp0cnVlLCJhY3RpdmUiOnRydWUsInJvbGVzIjoiZHJpdmVyIiwic2V4IjoibWFsZSJ9LCJydCI6dHJ1ZSwiaWF0IjoxNTQzNDE5OTc2LCJleHAiOjE1NDQwMjQ3NzZ9.b_MAWXpSEPPBMYPOGm_qVJ_EdaaAT9-dFpI4kg_PMJA",7);
     /*
     $(window).bind('beforeunload', function() {
         $.ajax({
@@ -41,11 +42,6 @@ $(document).ready(function()
     });
     $(".signup_avatar").click(function(event){
         event.stopPropagation();
-        $(".container_signin").removeClass("none");
-        $(".screenWelcome").removeClass("none");
-        $(".wrapper").removeClass("none");
-        forIcon = false;
-        clearInterval(myVar);
         $.ajax({
             type: "PUT",
             url: "http://localhost:8000/api/user/logout",
@@ -56,6 +52,11 @@ $(document).ready(function()
                 xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
             },
             success: function(data, status) {
+                $(".container_signin").removeClass("none");
+                $(".screenWelcome").removeClass("none");
+                $(".wrapper").removeClass("none");
+                forIcon = false;
+                clearInterval(myVar);
                 setCookie("success", JSON.stringify(data.success), 7);
                 setCookie("message", data.message, 7);
             },
@@ -64,9 +65,10 @@ $(document).ready(function()
                 alert("Don't Sign Up! Sorry!");
             }
         })
-    }); 
+    });   
     $("#signin-button").click(function(event)
     {
+        event.preventDefault();
         var data = {
             "email": $("#name").val(),
             "password": $("#password").val()
@@ -84,16 +86,17 @@ $(document).ready(function()
                 $(".screenWelcome").addClass("none");
                 $(".wrapper").addClass("none");
                 forIcon = false;
-                requestAcceptOrder(); // myVar
+                myVar = setInterval(requestAcceptOrder, 2000);
                 setCookie("accesstoken", data.accessToken, 1);
                 setCookie("refreshtoken", data.refreshToken, 7);
                 setCookie("user", JSON.stringify(data.user), 7);
-
+                if (JSON.stringify(data.user.status) === "true")
+                    checkStatus = true;
+                else
+                    checkStatus = false;
                 $(".username").text($("#name").val());
             },
             error: function(jqXhr) {
-                // alert(jqXhr.responseJSON    )
-
                 $(".btn-signin").addClass("active");
                 $(".title_signin").addClass("none");
                 $(".form").addClass("none");
@@ -104,34 +107,11 @@ $(document).ready(function()
                 }, 3000)
             }
         });
-        /*
-        $.ajax({
-            type: "PUT",
-            url: "http://localhost:8000/api/user/location",
-            data: {},
-            dataType: "json",
-            contentType: "application/json",
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
-            },
-            success: function(data, status) {
-                setCookie("success", JSON.stringify(data.success), 7);
-                setCookie("message", data.message, 7);
-                user_lat = data.lat;
-                user_long = data.long;
-                alert(user_lat);
-                alert(user_long);
-            },
-            error: function(jqXhr) {
-                console.log(JSON.stringify(jqXhr));
-                alert("Error! Don't Get User Location");
-            }
-        })
-        */
     });
     //console.log(getCookie("accesstoken"));
     $("#status").click(function(event)
     {
+        event.stopPropagation();
         if(checkStatus === false)
         {
             $("#status").addClass("statusClicked");
@@ -219,6 +199,9 @@ $(document).ready(function()
                                     success: function(data, status) {
                                         clearInterval(myVar);
                                     },
+                                    error: function(jqXhr) {
+                                        console.log(JSON.stringify(jqXhr));
+                                    }
                                 });
                             
                             }
@@ -233,6 +216,7 @@ $(document).ready(function()
     });
     $(".finish").click(function(event)
     {
+        event.stopPropagation();
         var data = {
             "status": false
         }
@@ -270,8 +254,10 @@ $(document).ready(function()
                                     $(".status").trigger("click");
                                     myVar = setInterval(requestAcceptOrder, 60000);
                                 },
+                                error: function(jqXhr) {
+                                    console.log(JSON.stringify(jqXhr));
+                                }
                             });
-                        
                         }
                         else {
                             alert("logout nhe")
@@ -283,6 +269,7 @@ $(document).ready(function()
     });
     $(".yes_accept").click(function(event)
     {
+        event.stopPropagation();
         $(".accept").addClass("none");
         $.ajax({
             type: "PUT",
@@ -307,6 +294,8 @@ $(document).ready(function()
     });
     $(".no_accept").click(function(event) // hello
     {
+        $(".accept").addClass("none");
+        event.stopPropagation();
         $.ajax({
             type: "PUT",
             url: "http://localhost:8000/api/user/driver/cancel/" + JSON.parse(getCookie("user"))._id,
@@ -318,7 +307,6 @@ $(document).ready(function()
             },
             success: function(data, status) {
                 setCookie("success", JSON.stringify(data.success), 7);
-                $(".accept").addClass("none");
                 myVar = setInterval(requestAcceptOrder, 60000);
             },
             error: function(jqXhr) {
@@ -328,14 +316,59 @@ $(document).ready(function()
         })
     });
 });
-var myValue;
-function myFunction() {
-    setTimeout(function(){
-        myValue = setTimeout(initMap, 3000);
-    }, 3000);
+function requestAcceptOrder()
+{
+    if (checkStatus === true)
+    {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8000/api/user/driver/ready/" + JSON.parse(getCookie("user"))._id,
+            data: {},
+            dataType: "json",
+            contentType: "application/json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+            },
+            success: function(data, status) {
+                //console.log(data.data);
+                $(".accept").removeClass("none");
+                clearInterval(myVar);
+                for (i in data)
+                {
+                    if(i === "data")
+                    {
+                        temp = data[i];
+                        for (j in temp)
+                        {
+                            temptemp = temp[j]
+                            for (k in temptemp)
+                            {
+                                if(k === "address")
+                                {
+                                    addressInRequest =  temptemp[k];
+                                    console.log(addressInRequest);
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            error: function(jqXhr) {
+                console.log(JSON.stringify(jqXhr));
+                //alert("Don't Get Data!");
+            }
+        })
+    }
 }
+var map; // Khởi tạo các biến global mã mình sẽ sử dụng.
+var directionsDisplay;
+var directionsService;
+var yourLocation;
+var userLocation;
+var markers = [];
+
 function initMap() 
-{  
+{   
     var lat_lng = {lat: 10.763292, lng: 106.682172};
     map = new google.maps.Map(document.getElementById('map'), 
     {    // Khởi tạo map với trong id html là map (lát nữa sẽ tạo <div id="map">)
@@ -367,7 +400,7 @@ function initMap()
         yourLocation = new google.maps.LatLng(lat, lng);
     }
 
-    map.addListener('click', function(e) {
+    map.addListener('click', function(e) {  // touch my map
         nav = navigator.geolocation;
         pos = nav.getCurrentPosition(fn_ok);
         placeMarkerAndPanTo(e.latLng, map);
@@ -414,70 +447,10 @@ function initMap()
     //document.getElementById('source').addEventListener('change', onChangeHandler);    // Tạo sự kiện khi chọn điểm xuất phát
     document.getElementById('yes_accept').addEventListener('click', onChangeHandler);  
     document.getElementById('signin-button').addEventListener('click', onChangeHandler2);      
-    document.getElementById('no_accept').addEventListener('click', onChangeHandler2); 
-    document.getElementById('finish').addEventListener('click', onChangeHandler2);       
+    document.getElementById('no_accept').addEventListener('click', onChangeHandler2);    
+    document.getElementById('finish').addEventListener('click', onChangeHandler2);    
     //document.getElementById('status').addEventListener('click', onChangeHandler);    
 } 
-function requestAcceptOrder()
-{
-    if (checkStatus === true)
-    {
-        $.ajax({
-            type: "GET",
-            url: "http://localhost:8000/api/user/driver/ready/" + JSON.parse(getCookie("user"))._id,
-            data: {},
-            dataType: "json",
-            contentType: "application/json",
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
-            },
-            success: function(data, status) {
-                //console.log(data.data);
-                for (i in data)
-                {
-                    if (i === "success")
-                    {
-                        temp = data[i];
-                        if(temp === "true")
-                        {
-                            $(".accept").removeClass("none");
-                            clearInterval(myVar);
-                        }
-                    }
-                }
-                for (i in data)
-                {
-                    if(i === "data")
-                    {
-                        temp = data[i];
-                        for (j in temp)
-                        {
-                            temptemp = temp[j]
-                            for (k in temptemp)
-                            {
-                                if(k === "address")
-                                {
-                                    addressInRequest =  temptemp[k];
-                                    console.log(addressInRequest);
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            error: function(jqXhr) {
-                console.log(JSON.stringify(jqXhr));
-                alert("Don't Get Data!");
-            }
-        })
-    }
-}
-var map; // Khởi tạo các biến global mã mình sẽ sử dụng.
-var directionsDisplay;
-var directionsService;
-var yourLocation;
-var userLocation;
-var markers = [];
 function placeMarkerAndPanTo(latLng, map) {
     
     var marker = new google.maps.Marker({
@@ -538,9 +511,7 @@ function placeMarkerAndPanTo(latLng, map) {
     else
     {
         $(".notice").addClass("none");
-        yourLocation = new google.maps.LatLng(click_lat, click_long);
-        driver_lat = click_lat;
-        driver_long = click_long;
+
         //hello
         var data = {
             "lat": driver_lat,
@@ -681,7 +652,7 @@ function getAccessToken(cb)
     }
     $.ajax({
         type: "POST",
-        url: "http://192.168.1.36:8000/auth/refreshtoken",
+        url: "http://localhost:8000/auth/refreshtoken",
         data: JSON.stringify(data),
         dataType: "json",
         contentType: "application/json",
