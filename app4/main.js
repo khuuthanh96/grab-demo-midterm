@@ -3,7 +3,8 @@ var driver_lat;
 var driver_long;
 var click_lat;
 var click_long;
-var myVar;
+var myVar = setInterval(requestAcceptOrder, 6000); // hello
+var runRequestAcceptOrder = false;
 var addressInRequest; // hello // cover for userLocation
 //var btnSignInClicked = "1";
 //var btnNoAcceptClicked = false;
@@ -56,13 +57,12 @@ $(document).ready(function()
                 $(".screenWelcome").removeClass("none");
                 $(".wrapper").removeClass("none");
                 forIcon = false;
-                clearInterval(myVar);
+                runRequestAcceptOrder = false;
                 setCookie("success", JSON.stringify(data.success), 7);
                 setCookie("message", data.message, 7);
             },
             error: function(jqXhr) {
                 console.log(JSON.stringify(jqXhr));
-                alert("Don't Sign Up! Sorry!");
             }
         })
     });   
@@ -86,14 +86,19 @@ $(document).ready(function()
                 $(".screenWelcome").addClass("none");
                 $(".wrapper").addClass("none");
                 forIcon = false;
-                myVar = setInterval(requestAcceptOrder, 2000);
+                runRequestAcceptOrder = true;
+                if (JSON.stringify(data.user.status) === "true")
+                {
+                    checkStatus = true;
+                }
+                if (JSON.stringify(data.user.status) === "false")
+                {
+                    checkStatus = false;
+                }
                 setCookie("accesstoken", data.accessToken, 1);
                 setCookie("refreshtoken", data.refreshToken, 7);
                 setCookie("user", JSON.stringify(data.user), 7);
-                if (JSON.stringify(data.user.status) === "true")
-                    checkStatus = true;
-                else
-                    checkStatus = false;
+
                 $(".username").text($("#name").val());
             },
             error: function(jqXhr) {
@@ -107,6 +112,30 @@ $(document).ready(function()
                 }, 3000)
             }
         });
+        /*
+        $.ajax({
+            type: "PUT",
+            url: "http://localhost:8000/api/user/location",
+            data: {},
+            dataType: "json",
+            contentType: "application/json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
+            },
+            success: function(data, status) {
+                setCookie("success", JSON.stringify(data.success), 7);
+                setCookie("message", data.message, 7);
+                user_lat = data.lat;
+                user_long = data.long;
+                alert(user_lat);
+                alert(user_long);
+            },
+            error: function(jqXhr) {
+                console.log(JSON.stringify(jqXhr));
+                alert("Error! Don't Get User Location");
+            }
+        })
+        */
     });
     //console.log(getCookie("accesstoken"));
     $("#status").click(function(event)
@@ -130,7 +159,7 @@ $(document).ready(function()
                     xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
                 },
                 success: function(data, status) {
-                    myVar = setInterval(requestAcceptOrder, 60000);
+                    runRequestAcceptOrder = true;
                 },
                 error: function(jqXhr) {
                     console.log(JSON.stringify(jqXhr));
@@ -148,7 +177,7 @@ $(document).ready(function()
                                         xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
                                     },
                                     success: function(data, status) {
-                                        myVar = setInterval(requestAcceptOrder, 60000);
+                                        runRequestAcceptOrder = true;
                                     },
                                 });
                             
@@ -179,7 +208,7 @@ $(document).ready(function()
                     xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
                 },
                 success: function(data, status) {
-                    clearInterval(myVar);
+                    runRequestAcceptOrder = false;
                 },
                 error: function(jqXhr) {
                     console.log(JSON.stringify(jqXhr));
@@ -197,7 +226,7 @@ $(document).ready(function()
                                         xhr.setRequestHeader("Authorization", "Bearer " + getCookie("accesstoken"))
                                     },
                                     success: function(data, status) {
-                                        clearInterval(myVar);
+                                        runRequestAcceptOrder = false;
                                     },
                                     error: function(jqXhr) {
                                         console.log(JSON.stringify(jqXhr));
@@ -232,7 +261,7 @@ $(document).ready(function()
             success: function(data, status) {
                 $(".finish").addClass("none");
                 $(".status").trigger("click");
-                myVar = setInterval(requestAcceptOrder, 60000);
+                runRequestAcceptOrder = true;
             },
             error: function(jqXhr) {
                 console.log(JSON.stringify(jqXhr));
@@ -252,7 +281,7 @@ $(document).ready(function()
                                 success: function(data, status) {
                                     $(".finish").addClass("none");
                                     $(".status").trigger("click");
-                                    myVar = setInterval(requestAcceptOrder, 60000);
+                                    runRequestAcceptOrder = true;
                                 },
                                 error: function(jqXhr) {
                                     console.log(JSON.stringify(jqXhr));
@@ -284,17 +313,20 @@ $(document).ready(function()
                 setCookie("success", JSON.stringify(data.success), 7);
                 $(".accept").addClass("none");
                 $(".finish").removeClass("none");
-                clearInterval(myVar);
+                //$(".status").removeClass("none");
+                //$("#status").removeClass("statusClicked");
+                //$("#status").text("STAND BY");
+                //checkStatus = false;
+                // Error nha
+                runRequestAcceptOrder = false;
             },
             error: function(jqXhr) {
                 console.log(JSON.stringify(jqXhr));
-                alert("Don't Accept! Sorry!");
             }
         })
     });
     $(".no_accept").click(function(event) // hello
     {
-        $(".accept").addClass("none");
         event.stopPropagation();
         $.ajax({
             type: "PUT",
@@ -307,18 +339,18 @@ $(document).ready(function()
             },
             success: function(data, status) {
                 setCookie("success", JSON.stringify(data.success), 7);
-                myVar = setInterval(requestAcceptOrder, 60000);
+                $(".accept").addClass("none");
+                runRequestAcceptOrder = true;
             },
             error: function(jqXhr) {
                 console.log(JSON.stringify(jqXhr));
-                alert("Don't Cancel! Sorry!");
             }
         })
     });
 });
 function requestAcceptOrder()
 {
-    if (checkStatus === true)
+    if (runRequestAcceptOrder === true && checkStatus === true)
     {
         $.ajax({
             type: "GET",
@@ -331,31 +363,17 @@ function requestAcceptOrder()
             },
             success: function(data, status) {
                 //console.log(data.data);
-                $(".accept").removeClass("none");
-                clearInterval(myVar);
-                for (i in data)
+                if(JSON.stringify(data.success) === "true")
                 {
-                    if(i === "data")
-                    {
-                        temp = data[i];
-                        for (j in temp)
-                        {
-                            temptemp = temp[j]
-                            for (k in temptemp)
-                            {
-                                if(k === "address")
-                                {
-                                    addressInRequest =  temptemp[k];
-                                    console.log(addressInRequest);
-                                }
-                            }
-                        }
-                    }
+                    $(".accept").removeClass("none");
+                    runRequestAcceptOrder = false;
+                    //chổ này muốn truy cập 
+                    addressInRequest = JSON.stringify(data.data.address);
+                    console.log(addressInRequest);
                 }
             },
             error: function(jqXhr) {
                 console.log(JSON.stringify(jqXhr));
-                //alert("Don't Get Data!");
             }
         })
     }
@@ -366,7 +384,12 @@ var directionsService;
 var yourLocation;
 var userLocation;
 var markers = [];
-
+var myVar;
+function myFunction() {
+    setTimeout(function(){
+        myVar = setTimeout(initMap, 3000);
+    }, 3000);
+}
 function initMap() 
 {   
     var lat_lng = {lat: 10.763292, lng: 106.682172};
@@ -532,7 +555,6 @@ function placeMarkerAndPanTo(latLng, map) {
             },
             error: function(jqXhr) {
                 console.log(JSON.stringify(jqXhr));
-                alert("Don't Update Driver Locaion! Sorry!");
             }
         })
     }
@@ -652,7 +674,7 @@ function getAccessToken(cb)
     }
     $.ajax({
         type: "POST",
-        url: "http://localhost:8000/auth/refreshtoken",
+        url: "http://192.168.1.36:8000/auth/refreshtoken",
         data: JSON.stringify(data),
         dataType: "json",
         contentType: "application/json",
