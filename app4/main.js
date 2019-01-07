@@ -3,7 +3,8 @@ var driver_lat;
 var driver_long;
 var click_lat;
 var click_long;
-var myVar = setInterval(requestAcceptOrder, 6000); // hello
+var checkPos = true;
+var myVar = setInterval(requestAcceptOrder, 10000); // hello
 var runRequestAcceptOrder = false;
 var addressInRequest; // hello // cover for userLocation
 //var btnSignInClicked = "1";
@@ -98,7 +99,6 @@ $(document).ready(function()
                 setCookie("accesstoken", data.accessToken, 1);
                 setCookie("refreshtoken", data.refreshToken, 7);
                 setCookie("user", JSON.stringify(data.user), 7);
-
                 $(".username").text($("#name").val());
             },
             error: function(jqXhr) {
@@ -421,7 +421,7 @@ function initMap()
         var lng = position.coords.longitude;
         driver_lat = lat;
         driver_long = lng;
-        yourLocation = new google.maps.LatLng(lat, lng);
+        yourLocation = new google.maps.LatLng(driver_lat, driver_long);
     }
 
     map.addListener('click', function(e) {  // touch my map
@@ -467,12 +467,25 @@ function initMap()
         userLocation = yourLocation;
         calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
     };    
+    var onChangeHandler3 = function() 
+    {    
+        if (checkPos == true)
+        {
+            forIcon = false;
+            driver_lat = click_lat;
+            driver_long = click_long;
+            yourLocation = new google.maps.LatLng(driver_lat, driver_long);
+            userLocation = yourLocation;
+            calculateAndDisplayRoute(directionsService, directionsDisplay);    // Hàm xử lý và hiển thị kết quả chỉ đường  
+        }
+    };    
 
     //document.getElementById('source').addEventListener('change', onChangeHandler);    // Tạo sự kiện khi chọn điểm xuất phát
     document.getElementById('yes_accept').addEventListener('click', onChangeHandler);  
     document.getElementById('signin-button').addEventListener('click', onChangeHandler2);      
     document.getElementById('no_accept').addEventListener('click', onChangeHandler2);    
     document.getElementById('finish').addEventListener('click', onChangeHandler2);    
+    document.getElementById('map').addEventListener('click', onChangeHandler3);    
     //document.getElementById('status').addEventListener('click', onChangeHandler);    
 } 
 function placeMarkerAndPanTo(latLng, map) {
@@ -531,11 +544,12 @@ function placeMarkerAndPanTo(latLng, map) {
     if (d > 100)
     {
         $(".notice").removeClass("none");
+        checkPos = false;
     }
     else
     {
         $(".notice").addClass("none");
-
+        checkPos = true;
         //hello
         var data = {
             "lat": driver_lat,

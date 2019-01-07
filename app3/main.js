@@ -90,7 +90,6 @@ $(document).ready(function(){
             },
             error: function(jqXhr) {
                 console.log(JSON.stringify(jqXhr));
-                alert("Don't Sign Up! Sorry!");
             }
         })
     }); 
@@ -119,7 +118,6 @@ $(document).ready(function(){
                 setCookie("user", JSON.stringify(data.user), 7);
 
                 runRequestFileJSON = "true";
-                alert("The server sends the request every 3 seconds.")
                 $(".username").text($("#name").val());
                 
             },

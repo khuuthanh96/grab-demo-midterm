@@ -44,11 +44,11 @@ class Request extends RequestModel {
 
     static async findLocatedByDriverID(uID) {
         const state = STATE["DA_DINH_VI"];
-        const req = await Request.find({"state": state, "driverID": uID})
+        const req = await Request.findOne({"state": state, "driverID": uID})
         .catch(err => console.log(err))
         if(typeof req == "undefined" || req.length === 0) return false;
 
-        if(req.driverID === uID) {
+        if(req.driverID == uID) {
             console.log(req.driverID, uID, req)
             return req;
         } else {

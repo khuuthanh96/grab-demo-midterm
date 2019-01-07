@@ -64,8 +64,8 @@ export default {
         note: ''
       },
       position: {
-        lat: 0,
-        lng: 0
+        lat: 10.823099,
+        lng: 106.629664
       }
     }
   },
@@ -121,7 +121,7 @@ export default {
       self.$http.get("https://maps.googleapis.com/maps/api/geocode/json", {
         params: {
           address: self.requestSelected.address,
-          key: 'AIzaSyBzpko9Lpfp1mkic--GLFEsKwPqTSq1AaA'
+          key: 'AIzaSyD-0eAWpyN2vKvNtORrbm89YfaSzkcbjf4'
         }
       })
       .then(res => {
@@ -134,7 +134,7 @@ export default {
       self.$http.get("https://maps.googleapis.com/maps/api/geocode/json", {
         params: {
           address: address,
-          key: 'AIzaSyBzpko9Lpfp1mkic--GLFEsKwPqTSq1AaA'
+          key: 'AIzaSyD-0eAWpyN2vKvNtORrbm89YfaSzkcbjf4'
         }
       })
       .then(res => {
