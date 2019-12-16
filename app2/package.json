@@ -12,7 +12,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.5.0",
     "@fortawesome/vue-fontawesome": "^0.1.2",
     "@pderas/vue2-geocoder": "^1.0.2",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "bootstrap-vue": "^2.0.0-rc.11",
     "i": "^0.3.6",
     "npm": "^6.4.1",
